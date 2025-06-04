@@ -8,7 +8,7 @@ from os.path import join, isdir
 import pickle
 from copy import deepcopy
 import threading
-from deploy.helpers.policy_unified import SquatLowLevelPolicy, LocoLowLevelPolicy, HomieLowLevelPolicy
+from deploy.helpers.policy_unified import SquatLowLevelPolicy, LocoLowLevelPolicy
 from deploy.helpers.rotation_helper import get_gravity_orientation, transform_imu_data
 from deploy.helpers.command_helper import create_damping_cmd, create_lower_damping_cmd, init_cmd_hg, init_cmd_go, MotorMode
 from deploy.helpers.KF import ESEKF, IMUKF, IMUEKF
@@ -130,44 +130,6 @@ class Controller_squat(Controller):
         print('[run] squat_cmd', self.squat_cmd)
         return target_dof_pos
 
-class Controller_homie(Controller):
-    def __init__(self, config: Config, args) -> None:
-        self.config = config
-        super().__init__(config, args)
-        self.homie_low_level_policy = HomieLowLevelPolicy(self.config)
-
-        self.homie_cmd = np.array([0., 0., 0., 0.75], dtype=np.float32)
-
-    def compute_homie_cmd(self, cmd_raw):
-        if cmd_raw is None:
-            return
-        # if self.homie_cmd[0] > 0.55 and cmd_raw[0] < 0:
-        #     d_hp = cmd_raw * self.config.max_cmd / 800
-        # else:
-        loco_cmd = cmd_raw[0:3] * self.config.max_cmd[0:3]
-        cmd_mask = np.abs(loco_cmd) >= self.config.cmd_clip[0:3]
-        self.homie_cmd[0:3] = loco_cmd * cmd_mask
-
-        d_hp = cmd_raw[3] * self.config.max_cmd[3] / 250
-        self.homie_cmd[3] += d_hp
-        default_h = 0.75
-        # default_p = 0.0
-        self.homie_cmd[3] = np.clip(self.homie_cmd[3], default_h - self.config.max_cmd[3], default_h)
-
-    def run(self, cmd_raw, gravity_orientation, omega, qj_obs, dqj_obs, target_dof_pos):
-        self.compute_homie_cmd(cmd_raw)
-        self.obs, self.action, target_dof_pos[self.config.action_idx] = self.homie_low_level_policy.inference(
-            self.homie_cmd,
-            gravity_orientation,
-            omega,
-            qj_obs[self.config.dof_idx],
-            dqj_obs[self.config.dof_idx])
-        # print('[run] obs', self.obs)
-        # print('[run] action', self.action)
-        # print('[run] target_dof_pos', target_dof_pos)
-        print('[run] homie_cmd', self.homie_cmd)
-        return target_dof_pos
-
 class Runner:
     def __init__(self, config: Config, args) -> None:
         self.config = config
@@ -178,9 +140,6 @@ class Runner:
         if hasattr(config, "loco_config"):
             loco_config = Config(f"deploy/configs/{config.loco_config}")
             self.loco_controller = Controller_loco(loco_config, args)
-        if hasattr(config, "homie_config"):
-            loco_config = Config(f"deploy/configs/{config.homie_config}")
-            self.homie_controller = Controller_homie(loco_config, args)
         self.counter = 0
         self.qj = np.zeros(config.num_dof, dtype=np.float32)
         self.dqj = np.zeros(config.num_dof, dtype=np.float32)
@@ -321,9 +280,9 @@ class Runner_online_real(Runner_online):
                 os.system("rm -r {}".format(self.save_data_dir))
             os.makedirs(self.save_data_dir, exist_ok=True)
 
-            # self.save_rawdata_thread = threading.Thread(target=self.save_rawdata)
-            # self.save_rawdata_thread.daemon = True
-            # self.save_rawdata_thread.start()
+            self.save_rawdata_thread = threading.Thread(target=self.save_rawdata)
+            self.save_rawdata_thread.daemon = True
+            self.save_rawdata_thread.start()
 
     def save_rawdata(self):
         while True:
@@ -344,8 +303,7 @@ class Runner_online_real(Runner_online):
                 "tau": self.tau_record,  # np.float32, shape = (num_actions,)
             }
             pickle.dump(rawdata, open(filepath, "wb"))
-            time.sleep(0.002)
-            # print("[save] rawdata at", filepath)
+            time.sleep(0.02)
 
     def send_cmd(self, cmd: Union[LowCmdGo, LowCmdHG]):
         if abs(self.tau_record).max() > 100: #
@@ -428,12 +386,7 @@ class Runner_online_real(Runner_online):
 
     def run_loco(self, debug=True, manual=True):
         self.refresh_prop()
-        # create observation
-        # try:
-        #     quat = esekf.update(self.quat, self.ang_vel)
-        # except:
-        #     quat = self.quat
-        #     print('warn===============================================')
+        
         gravity_orientation = get_gravity_orientation(self.quat)
         gravity_orientation = kf.update(gravity_orientation)
         omega = self.ang_vel.copy()
@@ -481,12 +434,7 @@ class Runner_online_real(Runner_online):
 
     def run_squat(self, debug=True, manual=True):
         self.refresh_prop()
-        # create observation
-        # try:
-        #     quat = esekf.update(self.quat, self.ang_vel)
-        # except:
-        #     quat = self.quat
-        #     print('warn===============================================')
+        
         gravity_orientation = get_gravity_orientation(self.quat)
         gravity_orientation = kf.update(gravity_orientation)
         omega = self.ang_vel.copy()
@@ -731,39 +679,6 @@ class Runner_online_real_dexhand(Runner_online_real):
         self.post_squat()
 
 
-    def run_hand(self, debug=True, manual=True):
-        self.refresh_prop()
-        
-        if debug:
-            create_damping_cmd(self.low_cmd)
-        create_lower_damping_cmd(self.low_cmd)
-        self.pd_control(self.default_controller, self.target_dof_pos)
-
-        self.grasp()
-
-        current_control_timestamp = time.time()
-        time_until_next_step = self.config.control_dt - (current_control_timestamp - self.last_control_timestamp)
-        if time_until_next_step > 0:
-            time.sleep(time_until_next_step)
-        current_control_timestamp = time.time()
-        self.last_control_timestamp = current_control_timestamp
-
-
-        # if abs(self.tau_record).max() > 50:
-        #     print("large tau: ", np.arange(29)[abs(self.tau_record) > 50])
-        #     self.damping_state()
-
-        self.ctrl_dual_hand(self.left_q_target, self.right_q_target)
-        self.send_cmd(self.low_cmd)
-        self.counter += 1
-
-        # if usb_right.damping_signal:
-        #     self.damping_state()
-
-        # if self.locoable():
-        #     self.transfer_to_loco = usb_left.run_loco_signal
-
-
 import mujoco.viewer
 import mujoco
 class Runner_handle_mujoco(Runner):
@@ -776,6 +691,38 @@ class Runner_handle_mujoco(Runner):
         self.d = mujoco.MjData(self.m)
         self.m.opt.timestep = self.config.simulation_dt
         self.last_control_timestamp = time.time()
+
+        self.save_data = args.save_data
+        if self.save_data:
+            self.save_data_dir = os.path.join(args.save_data_dir, config.exp_name)
+            assert not self.save_data_dir.startswith("/")
+            if isdir(self.save_data_dir):
+                os.system("rm -r {}".format(self.save_data_dir))
+            os.makedirs(self.save_data_dir, exist_ok=True)
+            self.save_rawdata_thread = threading.Thread(target=self.save_rawdata)
+            self.save_rawdata_thread.daemon = True
+            self.save_rawdata_thread.start()
+
+    def save_rawdata(self):
+        while True:
+            filepath = join(self.save_data_dir, "{}.pkl".format(str(self.counter).zfill(8)))
+            # if filepath exist: return
+            if os.path.exists(filepath) or self.counter < 1:
+                continue
+            rawdata = {
+                "proprioception": {
+                    "qj": self.qj,  # np.float32, shape = (num_actions,)
+                    "dqj": self.dqj,  # np.float32, shape = (num_actions,)
+                    "gravity_orientation": get_gravity_orientation(self.quat),  # np.float32, shape = (4,)
+                    "ang_vel": self.ang_vel,  # np.float32, shape = (3,)
+                },
+                "squat_cmd": self.squat_controller.squat_cmd if hasattr(self.config, "squat_config") else -1,
+                "loco_cmd": self.loco_controller.loco_cmd if hasattr(self.config, 'loco_config') else -1,  # np.float32, shape = (3,)
+                "target_dof_pos": self.target_dof_pos,  # np.float32, shape = (num_actions,)
+                "tau": self.tau_record,  # np.float32, shape = (num_actions,)
+            }
+            pickle.dump(rawdata, open(filepath, "wb"))
+            time.sleep(0.02)
 
     def pd_control(self, controller, target_q):
         """Calculates torques from position commands"""
@@ -878,44 +825,6 @@ class Runner_handle_mujoco(Runner):
         self.counter += 1
         self.post_loco()
 
-    def run_homie(self, manual=True):
-        if self.counter % self.config.control_decimation == 0:
-            # create observation
-            self.refresh_prop()
-            gravity_orientation = self.get_gravity_orientation(self.quat)
-            target_dof_pos = self.target_dof_pos.copy()
-
-            if manual:
-                cmd_raw = self.homie_controller.config.cmd_debug.copy()
-                cmd_raw[0] = usb_left.lx
-                cmd_raw[1] = usb_left.ly
-                cmd_raw[2] = usb_right.ry
-                cmd_raw[3] = usb_right.rx
-                # print(cmd_raw)
-            else:
-                cmd_raw = None
-            self.target_dof_pos = self.homie_controller.run(
-                cmd_raw, gravity_orientation,
-                self.ang_vel, self.qj, self.dqj,
-                target_dof_pos)
-
-        tau = self.pd_control(self.homie_controller, self.target_dof_pos)
-        # breakpoint()
-        self.d.ctrl[:] = tau
-        # print(tau)
-
-        current_control_timestamp = time.time()
-        # time.sleep(config.control_dt)
-        time_until_next_step = self.config.simulation_dt - (current_control_timestamp - self.last_control_timestamp)
-        if time_until_next_step > 0:
-            time.sleep(time_until_next_step)
-        current_control_timestamp = time.time()
-        self.last_control_timestamp = current_control_timestamp
-
-        mujoco.mj_step(self.m, self.d)
-        self.counter += 1
-
-
 from mujoco import Renderer
 class Runner_handle_mujoco_vision(Runner_handle_mujoco):
     def __init__(self, config: Config, args) -> None:
@@ -930,17 +839,17 @@ class Runner_handle_mujoco_vision(Runner_handle_mujoco):
 
     def run_loco(self, manual=True):
         super().run_loco(manual)
-        self.renderer.update_scene(self.m, camera=self.left_camera_id)
+        self.renderer.update_scene(self.d, camera=self.left_camera_id)
         left_image = self.renderer.render()
-        self.renderer.update_scene(self.m, camera=self.right_camera_id)
+        self.renderer.update_scene(self.d, camera=self.right_camera_id)
         right_image = self.renderer.render()
         self.render_image = np.concatenate((left_image, right_image), axis=1)
 
     def run_squat(self, manual=True):
         super().run_squat(manual)
-        self.renderer.update_scene(self.m, camera=self.left_camera_id)
+        self.renderer.update_scene(self.d, camera=self.left_camera_id)
         left_image = self.renderer.render()
-        self.renderer.update_scene(self.m, camera=self.right_camera_id)
+        self.renderer.update_scene(self.d, camera=self.right_camera_id)
         right_image = self.renderer.render()
         self.render_image = np.concatenate((left_image, right_image), axis=1)
 

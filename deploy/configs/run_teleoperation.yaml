@@ -4,7 +4,6 @@ loco_config: 'g1_loco.yaml'
 exp_name: 'run_teleoperation'
 xml_path: "resources/robots/g1_description/g1_29dof_camera.xml"
 
-simulation_duration: 600.0
 control_dt: 0.02
 control_decimation: 4
 
@@ -14,7 +13,6 @@ imu_type: "pelvis"
 lowcmd_topic: "rt/lowcmd"
 lowstate_topic: "rt/lowstate"
 ################################################################################################################################
-
 
 num_actions: 0
 num_obs: 0

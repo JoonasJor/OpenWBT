@@ -169,16 +169,4 @@ This code is built upon the following open-source repositories. Please visit the
 
 1. https://github.com/OpenTeleVision/TeleVision
 2. https://github.com/unitreerobotics/avp_teleoperate
-3. https://github.com/dexsuite/dex-retargeting
-4. https://github.com/stack-of-tasks/pinocchio
-5. https://github.com/casadi/casadi
-6. https://github.com/meshcat-dev/meshcat-python
-7. https://github.com/zeromq/pyzmq
-8. https://github.com/unitreerobotics/unitree_dds_wrapper
-9. https://github.com/tonyzhaozh/act
-10. https://github.com/facebookresearch/detr
-11. https://github.com/Dingry/BunnyVisionPro
-12. https://github.com/unitreerobotics/unitree_sdk2_python
-13. https://github.com/vuer-ai/vuer
-
 

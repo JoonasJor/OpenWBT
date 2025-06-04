@@ -82,8 +82,9 @@ def deploy_real(args):
                         runner.target_dof_pos[runner.config.action_hl_idx] + 0.01)
         runner.target_dof_pos[runner.config.action_hl_idx] = sol_q
 
-    p_record_video = Process(target=save_images, args=(tv_img_shm.name, tv_img_shape, tv_img_dtype))
-    p_record_video.start()
+    if args.save_image:
+        p_record_video = Process(target=save_images, args=(tv_img_shm.name, tv_img_shape, tv_img_dtype))
+        p_record_video.start()
     while True:
         if current_mode == "LOCOMOTION":
             runner.run_loco(debug=args.debug, manual=True)
@@ -100,9 +101,12 @@ def deploy_real(args):
                 print('Locomotion mode!')
                 print('Press Right_A to start the squat mode!')
 
+        # cv2.imshow("camera_view", cv2.cvtColor(runner.render_image, cv2.COLOR_RGB2BGR))
+        # cv2.waitKey(1)
 
-    p_record_video.terminate()
-    p_record_video.join()
+    if args.save_image:
+        p_record_video.terminate()
+        p_record_video.join()
     tv_img_shm.unlink()
     tv_img_shm.close()
     print("Finally, exiting program...")
@@ -116,6 +120,7 @@ if __name__ == "__main__":
     parser.add_argument("--config", type=str, help="config file name in the configs folder", default="run_loco_squat_grasp.yaml")
     parser.add_argument("--save_data", action="store_true", help="whether saving the real data")
     parser.add_argument("--save_data_dir", type=str, help="where to save the data", default="./save_real_data")
+    parser.add_argument("--save_image", action="store_true", help="whether saving the real image")
     parser.add_argument("--debug", action="store_true", help="")
     args = parser.parse_args()
 

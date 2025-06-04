@@ -47,17 +47,19 @@ class SquatLowLevelPolicy:
         self._last_action = np.zeros(
             self.cfg.num_actions, dtype=np.float32
         )
+        self.hidden_states=np.zeros([1,1,256], dtype=np.float32)
 
     def inference(
         self, cmd, gravity_orientation, omega, qj, dqj, upper_action=None
     ):
         obs = self.compute_observation(cmd, gravity_orientation, omega, qj, dqj)
         if self.policy_type == "onnx":
-            actions = self.policy_session.run(
-                ["action"],
+            actions, self.hidden_states = self.policy_session.run(
+                ["action", "output_hidden_states"],
                 {
                     "obs": obs,
-                }
+                    "input_hidden_states": self.hidden_states,
+                },
             )
             action = actions[0].squeeze()
         else:
@@ -77,7 +79,6 @@ class SquatLowLevelPolicy:
     ):
         default_angles_obs = self.cfg.default_angles[self.cfg.dof_idx]
         obs_cmd = cmd * self.cfg.cmd_scale
-        gravity_orientation = gravity_orientation * self.cfg.gravity_scale
         obs_omega = omega * self.cfg.ang_vel_scale
         obs_qj = (qj - default_angles_obs) * self.cfg.dof_pos_scale
         obs_dqj = dqj * self.cfg.dof_vel_scale
@@ -101,7 +102,6 @@ class LocoLowLevelPolicy:
     def __init__(self, cfg: Config):
         self.cfg = cfg
         self.policy_type, self.policy_session = load_policy(cfg.policy_path)
-        self.policy_type = "onnx_rnn"
 
         # buffer
         self._last_action = np.zeros(
@@ -123,14 +123,6 @@ class LocoLowLevelPolicy:
         # breakpoint()
         obs = self.compute_observation(cmd, gravity_orientation, omega, qj, dqj)
         if self.policy_type == "onnx":
-            actions = self.policy_session.run(
-                ["action"],
-                {
-                    "obs": obs,
-                }
-            )
-            action = actions[0].squeeze()
-        elif self.policy_type == "onnx_rnn":
             actions, self.hidden_states = self.policy_session.run(
                 ["action", "output_hidden_states"],
                 {
