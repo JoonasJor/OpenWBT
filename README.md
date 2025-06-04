@@ -42,16 +42,16 @@ see [Installation.md](installation.md)
 # Usage
 ## Starting the Robot
 
-Robot:
+First turn on the robot:
 - Press and hold the power button briefly, then hold it again until the blue light on the head turns on and stops blinking.
 
-Original Remote Controller:
+Then use the unitree remote controller to enter the damping mode (you can alse refer to [Unitree official document](https://support.unitree.com/home/zh/G1_developer/remote_control)):
 - Press and hold the power button briefly, then hold it again.
 - Press L2+R2 to enter deployable mode.
 - Press L2+A, the robot will show a ready pose.
 - Press L2+B to enter damping mode.
 
-Connecting to the Robot via Ethernet and Starting the Image Service
+## Connecting to the Robot via Ethernet and Starting the Image Service
 
 The first time you connect to the robot, you need to configure the `wifi` to install some dependencies. You can refer to [FAQ from unitree](https://support.unitree.com/home/zh/G1_developer/FAQ) for wifi configuration. We provide an example approach:
 
@@ -126,11 +126,11 @@ If images fail to display in VR, please double-check the following:
 - You have followed the steps in installation.md, including sending, installing, and trusting the certificate
 - The URL is entered exactly, with no typos or missing characters
 
-## control robot using joystick
+## Control Robot Using Joystick
 
 
-1. Press and hold the `power` button on the right joystick briefly to make the robot enter the ready position.
-2. Press and hold the `power` button on the right joystick to make the robot enter startup mode.
+1. Press the `power` button on the right joystick briefly to make the robot enter the ready position.
+2. Press and hold the `power` button on the right joystick for 1 seconds to make the robot enter startup mode.
 3. Press the `A` button on the left joystick to make the robot enter locomotion mode - use the joysticks on both the left and right joysticks to control movement and turning.
 4. In locomotion mode, press the `D` key on the left joystick to stop the robot from walking.
 5. Press the `A` button on the right joystick to make the robot enter body-pose-adjustment mode - use the joysticks on both the left and right joysticks to control squatting, standing, and upper body pitch angles.
@@ -168,6 +168,6 @@ This code is built upon the following open-source repositories. Please visit the
 1. https://github.com/OpenTeleVision/TeleVision
 2. https://github.com/unitreerobotics/avp_teleoperate
 
-# connect with us
+# Contact us 
 
-If you'd like to discuss anything, feel free to send an email to elgceben@gmail.com or add WeChat: zzk273939.
+If you'd like to discuss anything, feel free to send an email to zhikaizhang273@gmail.com or add WeChat: zzk273939.

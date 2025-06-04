@@ -1,6 +1,6 @@
 <div align="center">
   <h1 align="center"> OpenWBT </h1>
-  <h3 align="center"> 银河通用机器人 </h3>
+  <h3 align="center"> 银河通用机器人 · 清华大学 </h3>
   <!-- <p align="center">
     <a href="README.md"> English </a> | <a href="README_zh.md">中文</a>
   </p>     -->
@@ -11,7 +11,7 @@
 
 
 # Introduction
-该项目的技术实现主要由[R2S2](https://zzk273.github.io/R2S2/)支持。该仓库实现了使用 Apple Vision Pro 对 宇树（Unitree）G1 和 H1 人形机器人 进行**全身**的**遥操作控制**，该系统支持**不仅支持实机也能使用户在仿真中遥操**，基于该系统可以控制机器人像人一样运动、蹲、弯、抓，搬等，大幅度扩展了机器人作业空间以实现更多任务。
+该项目的技术实现主要由[R2S2](https://zzk273.github.io/R2S2/)支持。该仓库实现了使用 Apple Vision Pro 对宇树（Unitree）G1 和 H1 人形机器人 进行**全身**的**遥操作控制**，该系统支持**不仅支持实机也能使用户在仿真中遥操**，基于该系统可以控制机器人像人一样运动、蹲、弯、抓，搬等，大幅度扩展了机器人作业空间以实现更多任务。
 
 
 ## 效果：
@@ -43,14 +43,15 @@ see [Installation_zh.md](installation_zh.md)
 # 运行
 ## 启动机器人
    
-机器人：
+先启动机器人：
 - 短按+长按机器人开机键，等待头部蓝光亮起并停止闪烁 
 
-原装遥控器：
+使用宇树遥控器进入阻尼模式（也可以参考[宇树官方文档](https://support.unitree.com/home/zh/G1_developer/remote_control)）：
 -  短按+长按遥控器开机键
 -  L2+R2 进入调试模式
 -  L2+A 进入诊断模式（此时机器人会做出预备姿势）
 -  L2+B 进入阻尼模式
+
 ## 网线连接机器人并启动端侧图像服务
 
 第一次连接机器人需要为其配置连接`wifi`以安装一些依赖。wifi的配置请参考[FAQ from unitree](https://support.unitree.com/home/zh/G1_developer/FAQ)。以下是一种方式：
@@ -166,4 +167,4 @@ OpenWBT 的所有代码均遵循 <a rel="license" href="http://creativecommons.o
 
 # 联系我们
 
-如果你有想讨论的内容，欢迎发送邮件至 elgceben@gmail.com，或添加微信号：zzk273939。
+如果你有想讨论的内容，欢迎发送邮件至 zhikaizhang273@gmail.com，或添加微信号：zzk273939。
