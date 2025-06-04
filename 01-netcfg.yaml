@@ -1,0 +1,14 @@
+network:
+  version: 2
+  renderer: networkd
+  wifis:
+    wlan0:
+      dhcp4: yes  # 启用DHCP
+      dhcp4-overrides:
+        route-metric: 2000  # 修改DHCP分配路由的Metric值
+      access-points:
+        "your-wifi-name":
+          password: "your-wifi-password"
+      nameservers:
+        addresses: [8.8.8.8, 1.1.1.1]
+
