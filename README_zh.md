@@ -11,7 +11,7 @@
 
 
 # Introduction
-该仓库实现了使用 Apple Vision Pro 对 宇树（Unitree）G1 和 H1 人形机器人 进行**全身**的**遥操作控制**，该系统支持**不仅支持实机也能使用户在仿真中遥操**，基于该系统可以控制机器人像人一样运动、蹲、弯、抓，搬等，大幅度扩展了机器人作业空间以实现更多任务。
+该项目的技术实现主要由[R2S2](https://zzk273.github.io/R2S2/)支持。该仓库实现了使用 Apple Vision Pro 对 宇树（Unitree）G1 和 H1 人形机器人 进行**全身**的**遥操作控制**，该系统支持**不仅支持实机也能使用户在仿真中遥操**，基于该系统可以控制机器人像人一样运动、蹲、弯、抓，搬等，大幅度扩展了机器人作业空间以实现更多任务。
 
 
 ## 效果：
@@ -95,7 +95,7 @@ sudo chmod -R 777 /dev/ttyACM0; sudo chmod -R 777 /dev/ttyACM1
 真机运行：
 ``` bash
 source /opt/ros/foxy/setup.sh; source ~/unitree_ros2/setup.sh
-python -m deploy.run_teleoperation_real --config run_teleoperation.yaml --net eno1 --save_data
+python -m deploy.run_teleoperation_real --config run_teleoperation.yaml --net eno1
 ```
 仿真器中运行：
 ```bash
@@ -107,7 +107,7 @@ python -m deploy.run_teleoperation_mujoco --config run_teleoperation.yaml
 - 可进入调试模式，此时policy的action不会被执行
 ```bash
 source /opt/ros/foxy/setup.sh; source ~/unitree_ros2/setup.sh
-python -m deploy.run_teleoperation_real --config run_teleoperation.yaml --debug
+python -m deploy.run_teleoperation_real --config run_teleoperation.yaml --net eno1 --debug
 ```
 
 
@@ -120,6 +120,7 @@ python -m deploy.run_teleoperation_real --config run_teleoperation.yaml --debug
 
 注： 
 - 替换 192.168.123.2 成自己的wifi IP地址。
+
 如无法在VR中显示图片，请再三确认：
 - 是否按照`installation.md`投送、安装并信任了证书
 - 上述网址是否一字不差
@@ -162,3 +163,7 @@ OpenWBT 的所有代码均遵循 <a rel="license" href="http://creativecommons.o
 
 1. https://github.com/OpenTeleVision/TeleVision
 2. https://github.com/unitreerobotics/avp_teleoperate
+
+# 联系我们
+
+如果你有想讨论的内容，欢迎发送邮件至 elgceben@gmail.com，或添加微信号：zzk273939。

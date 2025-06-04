@@ -12,7 +12,7 @@
 
 
 # Introduction
-This repository implements **whole body teleoperation** of the Unitree G1 and H1 humanoid robot using Apple Vision Pro. The system supports **both real robots and simulation environments**, enabling users to control the robot to perform movements such as walking, squatting, bending, grasping, and lifting, thereby significantly expanding the robot's operational capabilities and enabling it to accomplish a wider range of tasks.
+The technical implementation of this project is mainly supported by [R2S2](https://zzk273.github.io/R2S2/). This repository implements **whole body teleoperation** of the Unitree G1 and H1 humanoid robot using Apple Vision Pro. The system supports **both real robots and simulation environments**, enabling users to control the robot to perform movements such as walking, squatting, bending, grasping, and lifting, thereby significantly expanding the robot's operational capabilities and enabling it to accomplish a wider range of tasks.
 
 ## Demonstration:
 TODO:
@@ -94,7 +94,7 @@ sudo chmod -R 777 /dev/ttyACM0; sudo chmod -R 777 /dev/ttyACM1
 Running in the Real:
 ``` bash
 source /opt/ros/foxy/setup.sh; source ~/unitree_ros2/setup.sh
-python -m deploy.run_teleoperation_real --config run_teleoperation.yaml --net eno1 --save_data
+python -m deploy.run_teleoperation_real --config run_teleoperation.yaml --net eno1
 ```
 Running in the Simulator:
 ```bash
@@ -104,11 +104,10 @@ python -m deploy.run_teleoperation_mujoco --config run_teleoperation.yaml
 Note:
 
 - Replace eno1 with the correct network interface name.
-
 - To enter debug mode (action from policy will not be executed) for real robot teleoperation, run:
 ```bash
 source /opt/ros/foxy/setup.sh; source ~/unitree_ros2/setup.sh
-python -m deploy.run_teleoperation_real --config run_teleoperation.yaml --debug
+python -m deploy.run_teleoperation_real --config run_teleoperation.yaml --net eno1 --debug
 ```
 
 ## Entering VR
@@ -122,21 +121,20 @@ Click "Enter VR" and allow tracking to view the first-person perspective. At thi
 
 Note: 
 - Replace the 192.168.123.2 with your own wifi IP address.
+
 If images fail to display in VR, please double-check the following:
-
 - You have followed the steps in installation.md, including sending, installing, and trusting the certificate
-
 - The URL is entered exactly, with no typos or missing characters
 
 ## control robot using joystick
 
-Controlling the robot with the joystick:
-  1. Press and hold the `power` button on the right joystick briefly to make the robot enter the ready position.
-  2. Press and hold the `power` button on the right joystick to make the robot enter startup mode.
-  3. Press the `A` button on the left joystick to make the robot enter locomotion mode - use the joysticks on both the left and right joysticks to control movement and turning.
-  4. In locomotion mode, press the `D` key on the left joystick to stop the robot from walking.
-  4. Press the `A` button on the right joystick to make the robot enter body-pose-adjustment mode - use the joysticks on both the left and right joysticks to control squatting, standing, and upper body pitch angles.
-  *Press the `D` button on the right joystick to make the robot enter safe damping mode.*
+
+1. Press and hold the `power` button on the right joystick briefly to make the robot enter the ready position.
+2. Press and hold the `power` button on the right joystick to make the robot enter startup mode.
+3. Press the `A` button on the left joystick to make the robot enter locomotion mode - use the joysticks on both the left and right joysticks to control movement and turning.
+4. In locomotion mode, press the `D` key on the left joystick to stop the robot from walking.
+5. Press the `A` button on the right joystick to make the robot enter body-pose-adjustment mode - use the joysticks on both the left and right joysticks to control squatting, standing, and upper body pitch angles.
+- *Press the `D` button on the right joystick to make the robot enter safe damping mode.*
 
 
 # TODO List
@@ -170,3 +168,6 @@ This code is built upon the following open-source repositories. Please visit the
 1. https://github.com/OpenTeleVision/TeleVision
 2. https://github.com/unitreerobotics/avp_teleoperate
 
+# connect with us
+
+If you'd like to discuss anything, feel free to send an email to elgceben@gmail.com or add WeChat: zzk273939.
