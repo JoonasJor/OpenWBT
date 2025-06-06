@@ -41,7 +41,7 @@ The technical implementation of this project is mainly supported by [R2S2](https
 </p> -->
 
 # Hardware List and Environment Configuration
-see [Installation.md](installation.md) 
+See [Installation.md](installation.md) 
 
 # Usage
 ## Starting the Robot
@@ -164,7 +164,9 @@ If you find our work helpful, please cite:
 
 # License
 
-All code of OpenWBT is under the <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License </a><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>. It is strictly forbidden to use it for commercial purposes before asking our team.
+All code of OpenWBT is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # Acknowledgments
 This code is built upon the following open-source repositories. Please visit the respective links to view their licenses:

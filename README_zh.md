@@ -160,7 +160,9 @@ python -m deploy.run_teleoperation_real --config run_teleoperation.yaml --net en
 ```
 # 许可证
 
-OpenWBT 的所有代码均遵循 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>。在未征得我们团队同意的情况下，严禁将其用于商业用途。
+OpenWBT 的所有代码均遵循[Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # 鸣谢
 
