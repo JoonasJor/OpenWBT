@@ -5,11 +5,11 @@
     <a href="README.md"> English </a> | <a href="README_zh.md">中文</a>
   </p>     -->
 
-[中文](README_zh.md) |[English](README.md)
+[中文](README_zh.md) | [English](README.md)
+
+:page_with_curl:[Paper](https://www.arxiv.org/pdf/2505.10918) | :house:[Project](https://zzk273.github.io/R2S2/)
 
 </div>
-
-### :page_with_curl:[Paper](https://www.arxiv.org/pdf/2505.10918) | :house:[Project](https://zzk273.github.io/R2S2/)
 
 
 # Introduction
