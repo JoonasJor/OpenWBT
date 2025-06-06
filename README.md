@@ -49,7 +49,7 @@ see [Installation.md](installation.md)
 First turn on the robot:
 - Press and hold the power button briefly, then hold it again until the blue light on the head turns on and stops blinking.
 
-Then use the unitree remote controller to enter the damping mode (you can alse refer to [Unitree official document](https://support.unitree.com/home/zh/G1_developer/remote_control)):
+Then use the unitree remote controller to enter the damping mode (you can also refer to [Unitree official document](https://support.unitree.com/home/zh/G1_developer/remote_control)):
 - Press and hold the power button briefly, then hold it again.
 - Press L2+R2 to enter deployable mode.
 - Press L2+A, the robot will show a ready pose.
@@ -57,7 +57,7 @@ Then use the unitree remote controller to enter the damping mode (you can alse r
 
 ## Connecting to the Robot via Ethernet and Starting the Image Service
 
-The first time you connect to the robot, you need to configure the `wifi` to install some dependencies. You can refer to [FAQ from unitree](https://support.unitree.com/home/zh/G1_developer/FAQ) for wifi configuration. We provide an example approach:
+For the first time you connect to the robot, you need to configure the `wifi` to install some dependencies. You can refer to [FAQ from unitree](https://support.unitree.com/home/zh/G1_developer/FAQ) for wifi configuration. We provide an example approach:
 
 Modify the `wifi` name and corresponding password in the `01-netcfg.yaml` file, and place the `01-netcfg.yaml` file in `/etc/netplan/` on the robot:
 
