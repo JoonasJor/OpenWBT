@@ -1,6 +1,6 @@
 <div align="center">
   <h1 align="center"> OpenWBT Project Environment Configuration Guide </h1>
-  <h3 align="center"> GalaxyGeneralRobotics </h3>
+  <h3 align="center"> GALBOT · Tsinghua </h3>
 
 [中文](installation_zh.md) |[英文](installation.md)
 

@@ -1,6 +1,6 @@
 <div align="center">
   <h1 align="center"> OpenWBT 项目环境配置说明 </h1>
-  <h3 align="center"> 银河通用机器人 </h3>
+  <h3 align="center"> 银河通用机器人 · 清华大学 </h3>
 
 [中文](installation_zh.md) |[英文](installation.md)
 
