@@ -9,6 +9,7 @@
 
 </div>
 
+### :page_with_curl:[Paper](https://www.arxiv.org/pdf/2505.10918) | :house:[Project](https://zzk273.github.io/R2S2/)
 
 
 # Introduction
