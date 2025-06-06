@@ -117,7 +117,7 @@ class UsbHandle:
         if key_idx != self.KEY_PULLEY:
             idx = key_idx - 1
             # print(f"left {self.KEY_NAMES[idx]} -> {self.KEY_STATUS[status]}")
-            # L1左手抓取，L2左手放开
+            # L1: left hand grasping, L2: left hand releasing
             if self.KEY_NAMES[idx] == "KEY_9" and self.KEY_STATUS[status] == "KEY_DOWN":
                 self.left_hand_grasp_state = True
                 # print('Left hand grasp: ', self.left_hand_grasp_state)
@@ -125,7 +125,7 @@ class UsbHandle:
                 self.left_hand_grasp_state = False
                 # print('Left hand release: ', self.left_hand_grasp_state)
 
-            # 左A切换到loco mode
+            # left A: switching to the locomotion mode
             elif self.KEY_NAMES[idx] == "KEY_1" and self.KEY_STATUS[status] == "KEY_DOWN":
                 self.run_loco_signal = True
                 # print('Run loco signal: ', self.run_loco_signal)
@@ -149,7 +149,8 @@ class UsbHandle:
         if key_idx != self.KEY_PULLEY:
             idx = key_idx - 1
             # print(f"right {self.KEY_NAMES[idx]} -> {self.KEY_STATUS[status]}")
-            # 短按右start初始模式，长按右start run policy
+            # press the right START briefly: switching to the initial mode
+            # long press the right START: switching to the running policy
             if self.KEY_NAMES[idx] == "KEY_5" and self.KEY_STATUS[status] == "KEY_DOWN":
                 self.start_signal = True
                 # print('Start signal: ', self.start_signal)
@@ -160,7 +161,8 @@ class UsbHandle:
                 self.start_signal = False
                 self.run_signal = False
 
-            # 短按右D阻尼模式，长按右D退出程序
+            # press the right D briefly: switching to the damping mode
+            # long press the right D: exit
             elif self.KEY_NAMES[idx] == "KEY_2" and self.KEY_STATUS[status] == "KEY_DOWN":
                 self.damping_signal = True
                 # print('Zero torque signal: ', self.damping_signal)
@@ -172,7 +174,7 @@ class UsbHandle:
             # self.exit_signal = False
             # print('Zero torque signal: ', self.damping_signal)
 
-            # 右A切换到squat mode
+            # right A: switching to the squating mode
             elif self.KEY_NAMES[idx] == "KEY_1" and self.KEY_STATUS[status] == "KEY_DOWN":
                 self.run_squat_signal = True
                 # print('Run squat signal: ', self.run_squat_signal)
@@ -180,7 +182,7 @@ class UsbHandle:
                 self.run_squat_signal = False
                 # print('Run squat signal: ', self.run_squat_signal)
 
-            # R1右手抓取，R2右手放开
+            # R1: right hand grasping, R2: right hand releasing
             elif self.KEY_NAMES[idx] == "KEY_9" and self.KEY_STATUS[status] == "KEY_DOWN":
                 self.right_hand_grasp_state = True
                 # print('Right hand grasp: ', self.right_hand_grasp_state)
