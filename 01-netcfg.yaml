@@ -3,9 +3,9 @@ network:
   renderer: networkd
   wifis:
     wlan0:
-      dhcp4: yes  # 启用DHCP
+      dhcp4: yes  # enable DHCP
       dhcp4-overrides:
-        route-metric: 2000  # 修改DHCP分配路由的Metric值
+        route-metric: 2000
       access-points:
         "your-wifi-name":
           password: "your-wifi-password"
