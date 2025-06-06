@@ -17,7 +17,9 @@ The technical implementation of this project is mainly supported by [R2S2](https
 
 ## Demonstration:
 
-<video controls width="500" src="img/demo.mp4"></video>
+<p align="center">
+<img src="./img/demo.webp" width="80%"/>
+</p>
 
 <!-- <p align="center">
   <table>

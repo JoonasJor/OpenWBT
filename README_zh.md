@@ -16,7 +16,9 @@
 
 
 ## 效果：
-<video controls width="500" src="img/demo.mp4"></video>
+<p align="center">
+<img src="./img/demo.webp" width="80%"/>
+</p>
 
 <!-- <p align="center">
   <table>
