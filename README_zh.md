@@ -5,14 +5,14 @@
     <a href="README.md"> English </a> | <a href="README_zh.md">中文</a>
   </p>     -->
 
-[中文](README_zh.md) |[英文](README.md)
+[中文](README_zh.md) | [英文](README.md)
 
 :page_with_curl:[论文](https://www.arxiv.org/pdf/2505.10918) | :house:[主页](https://zzk273.github.io/R2S2/)
 </div>
 
 
 # 介绍
-该项目的技术实现主要由[R2S2](https://zzk273.github.io/R2S2/)支持。该仓库实现了使用 Apple Vision Pro 对宇树（Unitree）G1 和 H1 人形机器人 进行**全身**的**遥操作控制**，该系统支持**不仅支持实机也能使用户在仿真中遥操**，基于该系统可以控制机器人像人一样运动、蹲、弯、抓，搬等，大幅度扩展了机器人作业空间以实现更多任务。
+该项目的技术实现主要由[R2S2](https://zzk273.github.io/R2S2/)支持。该仓库实现了使用 Apple Vision Pro 对宇树（Unitree）G1 和 H1 人形机器人进行**全身**的**遥操作控制**，该系统支持**不仅支持实机也能使用户在仿真中遥操**，基于该系统可以控制机器人像人一样运动、蹲、弯、抓，搬等，大幅度扩展了机器人作业空间以实现更多任务。
 
 
 ## 效果：
