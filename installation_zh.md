@@ -13,7 +13,7 @@
 | --------------------- | -------------- | ---------------------------------------------------------------- |
 | G1-EDU           | 宇树机器人开发平台 | [G1-EDU 开发者支持](https://support.unitree.com/home/zh/G1_developer) |
 | Apple Vision Pro | 苹果混合现实设备  | [https://www.apple.com/apple-vision-pro/](https://www.apple.com/apple-vision-pro/) |
-| 手柄               | 用于控制设备    | -                                                           |
+| 手柄               | 用于控制设备    | 请联系 openwbt@galbot.com                                                           |
 | 用户电脑              | 推荐使用ubuntu 20.04   | - |
 
 

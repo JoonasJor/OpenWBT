@@ -13,7 +13,7 @@
 | ---------------- | ---------------------------------- | ---------------------------------------------------------------------------- |
 | G1-EDU           | Unitree Robot Development Platform | [G1-EDU Developer Support](https://support.unitree.com/home/zh/G1_developer) |
 | Apple Vision Pro | Apple Mixed Reality Device         | [https://www.apple.com/apple-vision-pro/](https://www.apple.com/apple-vision-pro/)   |
-| Joystick         | For Device Control                 | -                                                                            |
+| Joystick         | For Device Control                 | Please contact openwbt@galbot.com                                                                            |
 | User Computer    | Ubuntu 20.04 Recommended           | -                                                                           |
 
 ### 1.2 IP Address Query
