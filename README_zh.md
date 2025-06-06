@@ -16,9 +16,11 @@
 
 
 ## 效果：
-TODO:
-
 <p align="center">
+<video src="./img/demo.mp4" width="80%"/>
+</p>
+
+<!-- <p align="center">
   <table>
     <tr>
       <td align="center" width="50%">
@@ -35,7 +37,7 @@ TODO:
       </td>
     </tr>
   </table>
-</p>
+</p> -->
 
 
 # 硬件清单与环境配置
@@ -142,6 +144,7 @@ python -m deploy.run_teleoperation_real --config run_teleoperation.yaml --net en
 - \[x\] 发布 Unitree G1 的真实世界全身遥操作功能  
 - \[x\] 发布 Unitree G1 的 Mujoco 仿真全身遥操作功能  
 - \[ \] 发布 Unitree H1 的全身遥操作功能  
+- \[ \] 发布 Latent Skill Space  
 
 # 引用
 

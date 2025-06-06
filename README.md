@@ -16,9 +16,12 @@
 The technical implementation of this project is mainly supported by [R2S2](https://zzk273.github.io/R2S2/). This repository implements **whole body teleoperation** of the Unitree G1 and H1 humanoid robot using Apple Vision Pro. The system supports **both real robots and simulation environments**, enabling users to control the robot to perform movements such as walking, squatting, bending, grasping, and lifting, thereby significantly expanding the robot's operational capabilities and enabling it to accomplish a wider range of tasks.
 
 ## Demonstration:
-TODO:
 
 <p align="center">
+<video src="./img/demo.mp4" width="80%"/>
+</p>
+
+<!-- <p align="center">
   <table>
     <tr>
       <td align="center" width="50%">
@@ -35,7 +38,7 @@ TODO:
       </td>
     </tr>
   </table>
-</p>
+</p> -->
 
 # Hardware List and Environment Configuration
 see [Installation.md](installation.md) 
@@ -144,7 +147,7 @@ If images fail to display in VR, please double-check the following:
 - \[x\] Release Unitree G1 whoble body teleoperation in real world.
 - \[x\] Release Unitree G1 whoble body teleoperation in mujoco.
 - \[ \] Release Unitree H1 whoble body teleoperation.
-
+- \[ \] Release Latent Skill Space.
 
 # Citation
 
