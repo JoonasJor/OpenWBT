@@ -7,7 +7,7 @@
 
 [中文](README_zh.md) | [English](README.md)
 
-:page_with_curl:[Paper](https://www.arxiv.org/pdf/2505.10918) | :house:[Project](https://zzk273.github.io/R2S2/)
+:page_with_curl:[Paper](https://www.arxiv.org/pdf/2505.10918) | :house:[Website](https://zzk273.github.io/R2S2/)
 
 </div>
 

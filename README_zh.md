@@ -7,6 +7,7 @@
 
 [中文](README_zh.md) |[英文](README.md)
 
+:page_with_curl:[论文](https://www.arxiv.org/pdf/2505.10918) | :house:[主页](https://zzk273.github.io/R2S2/)
 </div>
 
 
