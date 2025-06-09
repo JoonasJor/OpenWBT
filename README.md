@@ -41,7 +41,7 @@ The technical implementation of this project is mainly supported by [R2S2](https
 </p> -->
 
 # Hardware List and Environment Configuration
-See [Installation.md](installation.md) 
+See [Installation.md](installation.md) for our hardware list including the joystick and their acquisition and composition. 
 
 # Usage
 ## Starting the Robot
