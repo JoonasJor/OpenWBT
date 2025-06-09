@@ -42,8 +42,8 @@ In this project, the tele-operation can be split into lower-body control and upp
   </table>
 </p> -->
 
-# Hardware List and Environment Configuration
-See [Installation.md](installation.md) for our hardware list including the joystick and their acquisition and composition. 
+# Hardware and Environment Configuration
+See [Installation.md](installation.md) for 1) our hardware list including the joystick and their acquisition and composition, 2) the environment configuration.
 
 # Usage
 ## Starting the Robot
