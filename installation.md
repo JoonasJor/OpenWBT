@@ -22,7 +22,7 @@
 ```bash
 git clone https://github.com/GalaxyGeneralRobotics/OpenWBT.git
 ```
-The default working directory is `~/OpenWBT`, please modify according to your actual setup.
+The default working directory is `~/OpenWBT`. Please modify it according to your actual setup.
 
 ### Create and Activate Conda Environment
 
