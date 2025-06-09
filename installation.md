@@ -16,13 +16,6 @@
 | Joystick         | For Device Control                 | Please contact openwbt@galbot.com                                                                            |
 | User Computer    | Ubuntu 20.04 Recommended           | -                                                                           |
 
-### 1.2 IP Address Query
-
-Check your local IP address with the following command:
-
-```bash
-ifconfig | grep inet
-```
 ## Conda Environment Configuration
 
 ### Clone the Repository
