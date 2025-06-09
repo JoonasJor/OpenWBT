@@ -22,7 +22,7 @@
 
 ### 克隆本代码
 ```bash
-git clone https://github.com/Axian12138/OpenWBT.git
+git clone https://github.com/GalaxyGeneralRobotics/OpenWBT.git
 ```
 下面默认工作路径为`~/OpenWBT`，请根据实际情况修改。
 

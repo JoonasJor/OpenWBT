@@ -27,7 +27,7 @@ ifconfig | grep inet
 
 ### Clone the Repository
 ```bash
-git clone https://github.com/Axian12138/OpenWBT.git
+git clone https://github.com/GalaxyGeneralRobotics/OpenWBT.git
 ```
 The default working directory is `~/OpenWBT`, please modify according to your actual setup.
 
