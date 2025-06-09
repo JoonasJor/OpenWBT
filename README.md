@@ -15,6 +15,8 @@
 # Introduction
 The technical implementation of this project is mainly supported by [R2S2](https://zzk273.github.io/R2S2/). This repository implements **whole body teleoperation** of the Unitree G1 and H1 humanoid robot using Apple Vision Pro. The system supports **both real robots and simulation environments**, enabling users to control the robot to perform movements such as walking, squatting, bending, grasping, and lifting, thereby significantly expanding the robot's operational capabilities and enabling it to accomplish a wider range of tasks.
 
+In this project, the tele-operation can be split into lower-body control and upper-body control. For lower-body control, our method allows you to control the humanoid walk or change body pose with a pair of joystick controllers. For upper-body control, the robot hand motion is derived from the human hand poses measured in VR using inverse kinematics.
+
 ## Demonstration:
 
 <p align="center">
