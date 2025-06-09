@@ -1,5 +1,5 @@
 <div align="center">
-  <h1 align="center"> OpenWBT Project Environment Configuration Guide </h1>
+  <h1 align="center"> OpenWBT Hardware List and Environment Configuration</h1>
   <h3 align="center"> GALBOT · Tsinghua </h3>
 
 [中文](installation_zh.md) |[英文](installation.md)
@@ -7,7 +7,7 @@
 </div>
 
 
-## Hardware Environment
+# Hardware List
 
 | Device Name      | Description                        | Official Link                                                                |
 | ---------------- | ---------------------------------- | ---------------------------------------------------------------------------- |
@@ -15,7 +15,7 @@
 | Apple Vision Pro | Apple Mixed Reality Device         | [https://www.apple.com/apple-vision-pro/](https://www.apple.com/apple-vision-pro/)   |
 | Joystick         | For Device Control                 | Please contact openwbt@galbot.com                                                                            |
 | User Computer    | Ubuntu 20.04 Recommended           | -                                                                           |
-
+# Environment Configuration
 ## Conda Environment Configuration
 
 ### Clone the Repository
