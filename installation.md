@@ -205,7 +205,7 @@ Execute the `mkcert -CAROOT` command to get the path of `rootCA.pem`. Then use A
 ### Enable WebXR-Related Features on Apple Vision Pro
 Enable path: Settings >> Apps >> Safari Browser >> Advanced >> Feature Flags >> Enable WebXR-related features.
 
-### 3.5  Entering VR for Teleoperation with Real-Time Video
+### Entering VR for Teleoperation with Real-Time Video
 **Prerequisites**: The teleoperation program has been executed on the user's computer and the robot's image service is enabled.
 
 Open the browser on Apple Vision Pro and enter:
