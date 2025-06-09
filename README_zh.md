@@ -171,6 +171,12 @@ OpenWBT 的所有代码均遵循[Apache License 2.0](https://www.apache.org/lice
 1. https://github.com/OpenTeleVision/TeleVision
 2. https://github.com/unitreerobotics/avp_teleoperate
 
+# 更多要说的
+我们在超过5台不同的Unitree G1机器人及超过5个不同场地进行了模型验证，其表现具有高度鲁棒性。若严格遵循我们的sim2real部署代码，应不会出现问题。但针对首次部署，我们仍建议采取保守策略（与机器人保持安全距离，随时准备终止策略执行）。如遇任何异常行为，可直接联系我们。
+
+## Clearification:
+虽然OpenWBT的技术基础主要源自我们近期的论文[R2S2](https://zzk273.github.io/R2S2/)，但本项目并非对该论文的严格复现。我们加入了大量工程优化技巧，旨在为社区提供尽可能鲁棒的策略部署方案，并特别适配遥操作场景。
+
 # 联系我们
 
 如果你有想讨论的内容，欢迎发送邮件至 zhikaizhang273@gmail.com，或添加微信号：zzk273939。

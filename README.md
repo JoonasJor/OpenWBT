@@ -174,6 +174,13 @@ This code is built upon the following open-source repositories. Please visit the
 1. https://github.com/OpenTeleVision/TeleVision
 2. https://github.com/unitreerobotics/avp_teleoperate
 
+# More to say
+We evaluate our model on over 5 different Unitree G1 and at over 5 different locations. The performance is very robust. If you strictly follow our sim2real deployment code, there shouldn't be any problem. However, we still suggest adopting a conservative strategy for the first-time deployment (keep a safe distance from the robot, get 
+ready to kill the policy at any time). If you meet any unusual robot behavior, you can directly contact us.
+
+## Clearification:
+Though the technology behind OpenWBT is mainly supported by our recent paper [R2S2](https://zzk273.github.io/R2S2/), this open source project is not a strict reproduction of this paper. We add a lot of engineering tricks to make sure the policy can be deployed as robust as possible for the community and best suited for tele-operation.
+
 # Contact us 
 
 If you'd like to discuss anything, feel free to send an email to zhikaizhang273@gmail.com or add WeChat: zzk273939.
