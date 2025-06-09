@@ -144,9 +144,9 @@ If images fail to display in VR, please double-check the following:
 # TODO List
 
 - \[x\] Release the R2S2 paper with demos.
-- \[x\] Release Unitree G1 whoble body teleoperation in real world.
-- \[x\] Release Unitree G1 whoble body teleoperation in mujoco.
-- \[ \] Release Unitree H1 whoble body teleoperation.
+- \[x\] Release Unitree G1 whole body teleoperation in real world.
+- \[x\] Release Unitree G1 whole body teleoperation in mujoco.
+- \[ \] Release Unitree H1 whole body teleoperation.
 - \[ \] Release Latent Skill Space.
 
 # Citation
