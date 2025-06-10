@@ -18,7 +18,7 @@
 
 ## 效果：
 <p align="center">
-<img src="./img/0610_demo.webp" width="80%"/>
+<img src="./img/0611_demo.webp" width="80%"/>
 </p>
 
 <p align="center">

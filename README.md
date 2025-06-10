@@ -19,7 +19,7 @@ In this project, the tele-operation can be split into lower-body control and upp
 
 ## Demonstration:
 <p align="center">
-<img src="./img/0610_demo.webp" width="80%"/>
+<img src="./img/0611_demo.webp" width="80%"/>
 </p>
 
 <p align="center">
