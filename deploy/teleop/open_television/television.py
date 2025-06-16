@@ -5,6 +5,7 @@ from multiprocessing import Array, Process, shared_memory
 import numpy as np
 import asyncio
 import cv2
+import os
 
 from multiprocessing import context
 
@@ -14,6 +15,8 @@ Value = context._default_context.Value
 class TeleVision:
 
     def __init__(self, binocular, img_shape, img_shm_name, cert_file="./cert.pem", key_file="./key.pem", ngrok=False):
+        print(f"Current working directory: {os.getcwd()}")
+
         self.binocular = binocular
         self.img_height = img_shape[0]
         if binocular:  # split the image width to half of the device witdh to adapt to the binocular mode

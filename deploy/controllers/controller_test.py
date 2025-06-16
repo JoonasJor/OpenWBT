@@ -689,6 +689,123 @@ class Runner_handle_mujoco(Runner):
             self.save_rawdata_thread = threading.Thread(target=self.save_rawdata)
             self.save_rawdata_thread.daemon = True
             self.save_rawdata_thread.start()
+            
+        # Shared Arrays for hand states
+        self.left_hand_state_array = Array('d', Dex3_Num_Motors, lock=True)
+        self.right_hand_state_array = Array('d', Dex3_Num_Motors, lock=True)
+        self.left_q_target = np.full(Dex3_Num_Motors, 0)
+        self.right_q_target = np.full(Dex3_Num_Motors, 0)
+        q = 0.0
+        dq = 0.0
+        tau = 0.0
+        kp = 1.5
+        kd = 0.9
+        # initialize dex3-1's left hand cmd msg
+        self.left_msg = unitree_hg_msg_dds__HandCmd_()
+        for id in Dex3_1_Left_JointIndex:
+            ris_mode = self._RIS_Mode(id=id, status=0x01)
+            motor_mode = ris_mode._mode_to_uint8()
+            self.left_msg.motor_cmd[id].mode = motor_mode
+            self.left_msg.motor_cmd[id].q = q
+            self.left_msg.motor_cmd[id].dq = dq
+            self.left_msg.motor_cmd[id].tau = tau
+            self.left_msg.motor_cmd[id].kp = kp
+            self.left_msg.motor_cmd[id].kd = kd
+        # initialize dex3-1's right hand cmd msg
+        self.right_msg = unitree_hg_msg_dds__HandCmd_()
+        for id in Dex3_1_Right_JointIndex:
+            ris_mode = self._RIS_Mode(id=id, status=0x01)
+            motor_mode = ris_mode._mode_to_uint8()
+            self.right_msg.motor_cmd[id].mode = motor_mode
+            self.right_msg.motor_cmd[id].q = q
+            self.right_msg.motor_cmd[id].dq = dq
+            self.right_msg.motor_cmd[id].tau = tau
+            self.right_msg.motor_cmd[id].kp = kp
+            self.right_msg.motor_cmd[id].kd = kd
+        # initialize subscribe thread
+        self.subscribe_state_thread = threading.Thread(target=self._subscribe_hand_state)
+        self.subscribe_state_thread.daemon = True
+        self.subscribe_state_thread.start()
+        while True:
+            if any(self.left_hand_state_array) and any(self.right_hand_state_array):
+                break
+            time.sleep(0.01)
+            print("[Dex3_1_Controller] Waiting to subscribe dds...")
+
+    def send_cmd(self, cmd: Union[LowCmdGo, LowCmdHG]):
+        if abs(self.tau_record).max() > 100 or keyboard.damping_signal:  # abs(self.tau_record).max() > 100 or
+            print("large tau: ", np.arange(29)[abs(self.tau_record) > 100])
+            create_damping_cmd(self.low_cmd)
+            cmd = self.low_cmd
+        cmd.crc = CRC().Crc(cmd)
+        self.lowcmd_publisher_.Write(cmd)
+
+    class _RIS_Mode:
+
+        def __init__(self, id=0, status=0x01, timeout=0):
+            self.motor_mode = 0
+            self.id = id & 0x0F  # 4 bits for id
+            self.status = status & 0x07  # 3 bits for status
+            self.timeout = timeout & 0x01  # 1 bit for timeout
+
+        def _mode_to_uint8(self):
+            self.motor_mode |= (self.id & 0x0F)
+            self.motor_mode |= (self.status & 0x07) << 4
+            self.motor_mode |= (self.timeout & 0x01) << 7
+            return self.motor_mode
+
+    def _subscribe_hand_state(self):
+        self.LeftHandCmb_publisher = ChannelPublisher(kTopicDex3LeftCommand, HandCmd_)
+        self.LeftHandCmb_publisher.Init()
+        self.RightHandCmb_publisher = ChannelPublisher(kTopicDex3RightCommand, HandCmd_)
+        self.RightHandCmb_publisher.Init()
+        self.LeftHandState_subscriber = ChannelSubscriber(kTopicDex3LeftState, HandState_)
+        self.LeftHandState_subscriber.Init()
+        self.RightHandState_subscriber = ChannelSubscriber(kTopicDex3RightState, HandState_)
+        self.RightHandState_subscriber.Init()
+        while True:
+            left_hand_msg = self.LeftHandState_subscriber.Read()
+            right_hand_msg = self.RightHandState_subscriber.Read()
+            if left_hand_msg is not None and right_hand_msg is not None:
+                # Update left hand state
+                for idx, id in enumerate(Dex3_1_Left_JointIndex):
+                    self.left_hand_state_array[idx] = left_hand_msg.motor_state[id].q
+                # Update right hand state
+                for idx, id in enumerate(Dex3_1_Right_JointIndex):
+                    self.right_hand_state_array[idx] = right_hand_msg.motor_state[id].q
+            time.sleep(0.002)
+
+    def ctrl_dual_hand(self, left_q_target, right_q_target):
+        """set current left, right hand motor state target q"""
+        for idx, id in enumerate(Dex3_1_Left_JointIndex):
+            self.left_msg.motor_cmd[id].q = left_q_target[idx]
+        for idx, id in enumerate(Dex3_1_Right_JointIndex):
+            self.right_msg.motor_cmd[id].q = right_q_target[idx]
+
+        self.LeftHandCmb_publisher.Write(self.left_msg)
+        self.RightHandCmb_publisher.Write(self.right_msg)
+
+    def grasp(self):
+        dual_hand_data_lock = Lock()
+        dual_hand_state_array = Array('d', 14, lock=False)  # current left, right hand state(14) data.
+        dual_hand_action_array = Array('d', 14, lock=False)
+        state_data = np.concatenate((np.array(self.left_hand_state_array[:]), np.array(self.right_hand_state_array[:])))
+
+        if keyboard.left_hand_grasp_state == True:
+            self.left_q_target = np.array([0.0, 0.5, 1.0, -1.0, -1.0, -1.0, -1.0])
+        else:
+            self.left_q_target = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+        if keyboard.right_hand_grasp_state == True:
+            self.right_q_target = np.array([0.0, -0.5, -1.0, 1.0, 1.0, 1.0, 1.0])
+        else:
+            self.right_q_target = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+        action_data = np.concatenate((self.left_q_target, self.right_q_target))
+        if dual_hand_state_array and dual_hand_action_array:
+            with dual_hand_data_lock:
+                dual_hand_state_array[:] = state_data
+                dual_hand_action_array[:] = action_data
 
     def save_rawdata(self):
         while True:
@@ -760,6 +877,8 @@ class Runner_handle_mujoco(Runner):
             self.transition_squat()
         tau = self.pd_control(self.squat_controller, self.target_dof_pos)
         self.d.ctrl[:] = tau
+
+        self.grasp()
 
         current_control_timestamp = time.time()
         # time.sleep(config.control_dt)

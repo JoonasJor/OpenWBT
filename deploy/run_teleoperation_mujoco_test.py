@@ -1,16 +1,13 @@
 from deploy.config import Config
-from deploy.controllers.controller import Runner_handle_mujoco_vision #, Runner_offline_mujoco
+from deploy.controllers.controller import Runner_handle_mujoco #, Runner_offline_mujoco
 
 import time
 import cv2
-from multiprocessing import shared_memory, Process
-import threading
+from multiprocessing import shared_memory
 from datetime import datetime
 import os
 
-from deploy.teleop.open_television.tv_wrapper import TeleVisionWrapper
 from deploy.teleop.robot_control.robot_arm_ik import G1_29_ArmIK
-from deploy.teleop.image_server.image_client import ImageClient
 
 import numpy as np
 import torch
@@ -18,16 +15,7 @@ import torch
 torch.set_printoptions(precision=3)
 np.set_printoptions(precision=3)
 
-tv_img_shape = (480, 1280, 3)
-tv_img_dtype = np.uint8
-tv_img_shm = shared_memory.SharedMemory(create=True, size=np.prod(tv_img_shape) * np.uint8().itemsize)
-tv_img_array = np.ndarray(tv_img_shape, dtype=tv_img_dtype, buffer=tv_img_shm.buf)
-
-# television: obtain hand pose data from the XR device and transmit the robot's head camera image to the XR device.
-tv_wrapper = TeleVisionWrapper(True, tv_img_shape, tv_img_shm.name)
-
 arm_ik = G1_29_ArmIK()
-
 
 def get_output_dir():
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -64,24 +52,10 @@ def deploy_handle_mujoco(args):
     config = Config(config_path)
 
     # Initialize DDS communication
-    runner = Runner_handle_mujoco_vision(config, args=args)
+    runner = Runner_handle_mujoco(config, args=args)
     current_mode = "SQUAT"
     print('Squat mode!')
     print('Press 1 to start the locomotion mode!')
-
-    def tv_arms():
-        head_rmat, left_wrist, right_wrist, left_hand, right_hand = tv_wrapper.get_data()
-        current_lr_arm_q = runner.qj.copy()[15:29]
-        current_lr_arm_dq = runner.dqj.copy()[15:29]
-        # # solve ik using motor data and wrist pose, then use ik results to control arms.
-        sol_q, sol_tauff = arm_ik.solve_ik(left_wrist, right_wrist, current_lr_arm_q, current_lr_arm_dq)
-        sol_q = np.clip(sol_q, runner.target_dof_pos[runner.config.action_hl_idx] - 0.01,
-                        runner.target_dof_pos[runner.config.action_hl_idx] + 0.01)
-        runner.target_dof_pos[runner.config.action_hl_idx] = sol_q
-
-    if args.save_image:
-        p_record_video = Process(target=save_images, args=(tv_img_shm.name, tv_img_shape, tv_img_dtype))
-        p_record_video.start()
 
     with mujoco.viewer.launch_passive(runner.m, runner.d) as viewer:
         runner.last_control_timestamp = time.time()
@@ -95,25 +69,12 @@ def deploy_handle_mujoco(args):
                     print('Press 1 to start the locomotion mode!')
 
             elif current_mode == "SQUAT":
-                tv_arms()
                 runner.run_squat(manual=True)
                 viewer.sync()
                 if runner.transfer_to_loco:
                     current_mode = "LOCOMOTION"
                     print('Locomotion mode!')
                     print('Press 2 to start the squat mode!')
-            np.copyto(tv_img_array, np.array(runner.render_image))
-
-
-            # cv2.imshow("camera_view", cv2.cvtColor(runner.render_image, cv2.COLOR_RGB2BGR))
-            # cv2.waitKey(1)
-
-    if args.save_image:
-        p_record_video.terminate()
-        p_record_video.join()
-    tv_img_shm.unlink()
-    tv_img_shm.close()
-
 
 if __name__ == "__main__":
     import argparse

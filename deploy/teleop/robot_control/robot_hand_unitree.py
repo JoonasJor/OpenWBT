@@ -19,7 +19,7 @@ parent2_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__
 sys.path.append(parent2_dir)
 from teleop.robot_control.hand_retargeting import HandRetargeting, HandType
 from teleop.utils.weighted_moving_filter import WeightedMovingFilter
-from teleop.handle_controller import UsbHandle
+from controllers.handle_controller import KeyboardHandle
 
 unitree_tip_indices = [4, 9, 14]  # [thumb, index, middle] in OpenXR
 Dex3_Num_Motors = 7
@@ -262,12 +262,8 @@ if __name__ == "__main__":
     # image_receive_thread.daemon = True
     # image_receive_thread.start()
 
-    usb_left = UsbHandle("/dev/ttyACM0")
-    usb_right = UsbHandle("/dev/ttyACM1")
-    usb_left.start_receiving()
-    usb_right.start_receiving()
-    usb_left.register_callback(usb_left.left_callback)
-    usb_right.register_callback(usb_right.right_callback)
+    keyboard = KeyboardHandle()
+    keyboard.start_receiving()
 
     if args.dex:
         dual_hand_data_lock = Lock()
@@ -280,8 +276,8 @@ if __name__ == "__main__":
     user_input = input("Please enter the start signal (enter 'r' to start the subsequent program):\n")
     if user_input.lower() == 'r':
         while True:
-            left_hand_grasp_state = usb_left.left_hand_grasp_state
-            right_hand_grasp_state = usb_right.right_hand_grasp_state
+            left_hand_grasp_state = keyboard.left_hand_grasp_state
+            right_hand_grasp_state = keyboard.right_hand_grasp_state
 
             # with dual_hand_data_lock:
             #     print(f"state : {list(dual_hand_state_array)} \naction: {list(dual_hand_action_array)} \n")
