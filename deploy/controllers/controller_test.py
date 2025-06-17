@@ -8,11 +8,11 @@ from os.path import join, isdir
 import pickle
 from copy import deepcopy
 import threading
-from deploy.helpers.policy_unified import SquatLowLevelPolicy, LocoLowLevelPolicy
-from deploy.helpers.rotation_helper import get_gravity_orientation, transform_imu_data
-from deploy.helpers.command_helper import create_damping_cmd, create_lower_damping_cmd, init_cmd_hg, init_cmd_go, MotorMode
-from deploy.helpers.KF import ESEKF, IMUKF, IMUEKF
-from deploy.controllers.handle_controller import KeyboardHandle
+from helpers.policy_unified import SquatLowLevelPolicy, LocoLowLevelPolicy
+from helpers.rotation_helper import get_gravity_orientation, transform_imu_data
+from helpers.command_helper import create_damping_cmd, create_lower_damping_cmd, init_cmd_hg, init_cmd_go, MotorMode
+from helpers.KF import ESEKF, IMUKF, IMUEKF
+from controllers.handle_controller import KeyboardHandle
 
 from unitree_sdk2py.core.channel import ChannelPublisher, ChannelFactoryInitialize
 from unitree_sdk2py.core.channel import ChannelSubscriber, ChannelFactoryInitialize
@@ -727,6 +727,7 @@ class Runner_handle_mujoco(Runner):
         self.subscribe_state_thread.daemon = True
         self.subscribe_state_thread.start()
         while True:
+            break
             if any(self.left_hand_state_array) and any(self.right_hand_state_array):
                 break
             time.sleep(0.01)

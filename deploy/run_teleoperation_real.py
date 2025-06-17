@@ -1,4 +1,3 @@
-# import onnxruntime as ort
 from deploy.config import Config
 from deploy.controllers.controller import Runner_online_real_dexhand, Runner_handle_mujoco  #, Runner_offline_mujoco
 

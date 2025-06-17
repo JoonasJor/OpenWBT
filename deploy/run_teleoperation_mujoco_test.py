@@ -1,5 +1,5 @@
 from config import Config
-from controllers.controller import Runner_handle_mujoco #, Runner_offline_mujoco
+from controllers.controller_test import Runner_handle_mujoco #, Runner_offline_mujoco
 
 import time
 import cv2

@@ -18,7 +18,9 @@ class KeyboardHandle:
         self.move_y = 0.0
         self.turn_x = 0.0
         self.turn_y = 0.0
-        self.speed = 2.0
+
+        self.move_speed = 2.0
+        self.turn_speed = 4.0
 
     def start_listener(self):
         print("Started keyboard listener")
@@ -32,93 +34,88 @@ class KeyboardHandle:
             
     def on_press(self, key):
         try:
-            if key.char == "1":
+            # Signals
+            if key == keyboard.KeyCode(char="1"):
                 self.run_loco_signal = True
-                print(f"run_loco_signal: {self.run_loco_signal}")
-            elif key.char == "2":
+                print("run_loco_signal")
+            elif key == keyboard.KeyCode(char="2"):
                 self.run_squat_signal = True
-                print(f"run_squat_signal: {self.run_squat_signal}")
-            elif key.char == "3":
+                print("run_squat_signal")
+            elif key == keyboard.KeyCode(char="3"):
                 self.stopgait_signal = True
-                print(f"stopgait_signal: {self.stopgait_signal}")
-            elif key.char == "4":
+                print("stopgait_signal")
+            elif key == keyboard.KeyCode(char="4"):
                 self.left_hand_grasp_state = True
-                print(f"left_hand_grasp_state: {self.left_hand_grasp_state}")
-            elif key.char == "5":
+                print("left_hand_grasp_state")
+            elif key == keyboard.KeyCode(char="5"):
                 self.right_hand_grasp_state = True
-                print(f"right_hand_grasp_state: {self.right_hand_grasp_state}")
-            elif key.char == "6":
+                print("right_hand_grasp_state")
+            elif key == keyboard.KeyCode(char="6"):
                 self.start_signal = True
-                print(f"start_signal: {self.start_signal}")
-            elif key.char == "7":
                 self.run_signal = True
-                print(f"run_signal: {self.run_signal}")
-            elif key.char == "8":
+                print("start_signal + run_signal")
+            elif key == keyboard.KeyCode(char="7"):
                 self.damping_signal = True
-                print(f"damping_signal: {self.damping_signal}")
-            elif key.char == "w":
-                self.move_x = self.speed
-                print(f"move_x: {self.move_x}")
-            elif key.char == "s":
-                self.move_x = -self.speed
-                print(f"move_x: {self.move_x}")
-            elif key.char == "a":
-                self.move_y = self.speed
-                print(f"move_y: {self.move_y}")
-            elif key.char == "d":
-                self.move_y = -self.speed
-                print(f"move_y: {self.move_y}")
-        except Exception as e:
-            pass
+                print("damping_signal")
 
-        try:
-            if key == keyboard.Key.up:  
-                self.turn_x = self.speed
-                print(f"turn_x: {self.turn_x}")
+            # Movement
+            elif key == keyboard.KeyCode(char="w"):
+                self.move_x = self.move_speed
+                #print(f"move_x: {self.move_x}")
+            elif key == keyboard.KeyCode(char="s"):
+                self.move_x = -self.move_speed
+                #print(f"move_x: {self.move_x}")
+            elif key == keyboard.KeyCode(char="a"):
+                self.move_y = self.move_speed
+                #print(f"move_y: {self.move_y}")
+            elif key == keyboard.KeyCode(char="d"):
+                self.move_y = -self.move_speed
+                #print(f"move_y: {self.move_y}")
+            elif key == keyboard.Key.up:  
+                self.turn_x = self.turn_speed
+                #print(f"turn_x: {self.turn_x}")
             elif key == keyboard.Key.down:
-                self.turn_x = -self.speed
-                print(f"turn_x: {self.turn_x}")
+                self.turn_x = -self.turn_speed
+                #print(f"turn_x: {self.turn_x}")
             elif key == keyboard.Key.left:
-                self.turn_y = self.speed
-                print(f"turn_y: {self.turn_y}")
+                self.turn_y = self.turn_speed
+                #print(f"turn_y: {self.turn_y}")
             elif key == keyboard.Key.right:
-                self.turn_y = -self.speed
-                print(f"turn_y: {self.turn_y}")
+                self.turn_y = -self.turn_speed
+                #print(f"turn_y: {self.turn_y}")
         except Exception as e:
-            pass
+            print(e)
 
     def on_release(self, key):
         try:
-            if key.char == "1":
+            # Signals
+            if key == keyboard.KeyCode(char="1"):
                 self.run_loco_signal = False
-            elif key.char == "4":
+            elif key == keyboard.KeyCode(char="2"):
                 self.run_squat_signal = False
-            elif key.char == "2":
+            elif key == keyboard.KeyCode(char="3"):
                 self.stopgait_signal = False
-            elif key.char == "3":
+            elif key == keyboard.KeyCode(char="4"):
                 self.left_hand_grasp_state = False
-            elif key.char == "6":
-                self.right_hand_grasp_state =False
-            elif key.char == "5":
+            elif key == keyboard.KeyCode(char="5"):
+                self.right_hand_grasp_state = False
+            elif key == keyboard.KeyCode(char="6"):
                 self.start_signal = False
-            elif key.char == "7":
                 self.run_signal = False
-            elif key.char == "8":
+            elif key == keyboard.KeyCode(char="7"):
                 self.damping_signal = False
-            elif key.char == "w" or key.char == "s":
+            
+            # Movement
+            elif key == keyboard.KeyCode(char="w") or key == keyboard.KeyCode(char="s"):
                 self.move_x = 0
-            elif key.char == "a" or key.char == "d":
+            elif key == keyboard.KeyCode(char="a") or key == keyboard.KeyCode(char="d"):
                 self.move_y = 0
-        except Exception:
-            pass
-        
-        try:
-            if key == keyboard.Key.up or key == keyboard.Key.down:
+            elif key == keyboard.Key.up or key == keyboard.Key.down:
                 self.turn_x = 0
             elif key == keyboard.Key.left or key == keyboard.Key.right:
                 self.turn_y = 0
             elif key == keyboard.Key.esc:
                 self.stop_listener()
         except Exception as e:
-            pass
+            print(e)
 
