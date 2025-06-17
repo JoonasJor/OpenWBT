@@ -263,7 +263,7 @@ if __name__ == "__main__":
     # image_receive_thread.start()
 
     keyboard = KeyboardHandle()
-    keyboard.start_receiving()
+    keyboard.start_listener()
 
     if args.dex:
         dual_hand_data_lock = Lock()

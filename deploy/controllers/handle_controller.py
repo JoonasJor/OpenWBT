@@ -20,11 +20,13 @@ class KeyboardHandle:
         self.turn_y = 0.0
         self.speed = 2.0
 
-    def start_receiving(self):
+    def start_listener(self):
+        print("Started keyboard listener")
         self.running = True
         self.listener.start()
 
-    def stop_receiving(self):
+    def stop_listener(self):
+        print("Stopped keyboard listener")
         self.running = False
         self.listener.stop()
             
@@ -116,8 +118,7 @@ class KeyboardHandle:
             elif key == keyboard.Key.left or key == keyboard.Key.right:
                 self.turn_y = 0
             elif key == keyboard.Key.esc:
-                print("Stopped keyboard listener")
-                self.stop_receiving()
+                self.stop_listener()
         except Exception as e:
             pass
 

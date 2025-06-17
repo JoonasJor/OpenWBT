@@ -2,17 +2,17 @@ import time
 import numpy as np
 import torch
 from typing import Union
-from deploy.config import Config
+from config import Config
 import os
 from os.path import join, isdir
 import pickle
 from copy import deepcopy
 import threading
-from deploy.helpers.policy_unified import SquatLowLevelPolicy, LocoLowLevelPolicy
-from deploy.helpers.rotation_helper import get_gravity_orientation, transform_imu_data
-from deploy.helpers.command_helper import create_damping_cmd, create_lower_damping_cmd, init_cmd_hg, init_cmd_go, MotorMode
-from deploy.helpers.KF import ESEKF, IMUKF, IMUEKF
-from deploy.controllers.handle_controller import KeyboardHandle
+from helpers.policy_unified import SquatLowLevelPolicy, LocoLowLevelPolicy
+from helpers.rotation_helper import get_gravity_orientation, transform_imu_data
+from helpers.command_helper import create_damping_cmd, create_lower_damping_cmd, init_cmd_hg, init_cmd_go, MotorMode
+from helpers.KF import ESEKF, IMUKF, IMUEKF
+from controllers.handle_controller import KeyboardHandle
 
 from unitree_sdk2py.core.channel import ChannelPublisher, ChannelFactoryInitialize
 from unitree_sdk2py.core.channel import ChannelSubscriber, ChannelFactoryInitialize
@@ -32,7 +32,7 @@ torch.set_printoptions(precision=3)
 np.set_printoptions(precision=3)
 
 keyboard = KeyboardHandle()
-keyboard.start_receiving()
+keyboard.start_listener()
 
 class Controller:
 
@@ -517,12 +517,12 @@ class Runner_online_real_dexhand(Runner_online_real):
         for id in Dex3_1_Left_JointIndex:
             ris_mode = self._RIS_Mode(id=id, status=0x01)
             motor_mode = ris_mode._mode_to_uint8()
-            self.left_msg.motor_cmd[id].mode = motor_mode
-            self.left_msg.motor_cmd[id].q = q
-            self.left_msg.motor_cmd[id].dq = dq
-            self.left_msg.motor_cmd[id].tau = tau
-            self.left_msg.motor_cmd[id].kp = kp
-            self.left_msg.motor_cmd[id].kd = kd
+            self.left_msg.motor_cmd[id].mode = motor_mode # (PMSM) mode
+            self.left_msg.motor_cmd[id].q = q # Joint target position
+            self.left_msg.motor_cmd[id].dq = dq # Joint target speed
+            self.left_msg.motor_cmd[id].tau = tau # Joint target torque 
+            self.left_msg.motor_cmd[id].kp = kp  # Joint stiffness coefficient
+            self.left_msg.motor_cmd[id].kd = kd # Joint damping coefficient
         # initialize dex3-1's right hand cmd msg
         self.right_msg = unitree_hg_msg_dds__HandCmd_()
         for id in Dex3_1_Right_JointIndex:
@@ -779,13 +779,14 @@ class Runner_handle_mujoco(Runner):
             self.refresh_prop()
             gravity_orientation = self.get_gravity_orientation(self.quat)
             target_dof_pos = self.target_dof_pos.copy()
+            #print(target_dof_pos)
 
             if manual:
                 cmd_raw = self.loco_controller.config.cmd_debug.copy()
                 cmd_raw[0] = keyboard.move_x
                 cmd_raw[1] = keyboard.move_y
                 cmd_raw[2] = keyboard.turn_y
-                # print(cmd_raw)
+                #print(cmd_raw)
             else:
                 cmd_raw = None
             if not self.transition_loco():
@@ -795,7 +796,6 @@ class Runner_handle_mujoco(Runner):
         tau = self.pd_control(self.loco_controller, self.target_dof_pos)
         # breakpoint()
         self.d.ctrl[:] = tau
-        # print(tau)
 
         current_control_timestamp = time.time()
         # time.sleep(config.control_dt)

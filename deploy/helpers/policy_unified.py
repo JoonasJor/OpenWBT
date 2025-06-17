@@ -3,11 +3,11 @@ import numpy as np
 import onnxruntime as ort
 import torch
 
-from deploy.helpers.gait_planner import BipedalGaitPlanner
-from deploy.config import Config
+from helpers.gait_planner import BipedalGaitPlanner
+from config import Config
 from typing import TypedDict
 
-from deploy.helpers.rotation_helper import broadcast_quat_apply_np, broadcast_quat_multiply_np, quat_inv_np
+from helpers.rotation_helper import broadcast_quat_apply_np, broadcast_quat_multiply_np, quat_inv_np
 
 
 class TaskDict(TypedDict):

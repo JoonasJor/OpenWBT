@@ -2,7 +2,7 @@ import time
 import numpy as np
 import torch
 from typing import Union
-from deploy.config import Config
+from config import Config
 import os
 from os.path import join, isdir
 import pickle
@@ -32,7 +32,7 @@ torch.set_printoptions(precision=3)
 np.set_printoptions(precision=3)
 
 keyboard = KeyboardHandle()
-keyboard.start_receiving()
+keyboard.start_listener()
 
 class Controller:
 

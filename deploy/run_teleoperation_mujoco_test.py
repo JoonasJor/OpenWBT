@@ -1,5 +1,5 @@
-from deploy.config import Config
-from deploy.controllers.controller import Runner_handle_mujoco #, Runner_offline_mujoco
+from config import Config
+from controllers.controller import Runner_handle_mujoco #, Runner_offline_mujoco
 
 import time
 import cv2
@@ -7,7 +7,7 @@ from multiprocessing import shared_memory
 from datetime import datetime
 import os
 
-from deploy.teleop.robot_control.robot_arm_ik import G1_29_ArmIK
+from teleop.robot_control.robot_arm_ik import G1_29_ArmIK
 
 import numpy as np
 import torch

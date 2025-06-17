@@ -1,6 +1,6 @@
 import numpy as np
 import numpy.linalg as la
-import deploy.helpers.transformations as tr
+import helpers.transformations as tr
 import math
 
 
