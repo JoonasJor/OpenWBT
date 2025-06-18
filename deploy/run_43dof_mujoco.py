@@ -1,5 +1,5 @@
 from config import Config
-from controllers.controller_test import Runner_handle_mujoco #, Runner_offline_mujoco
+from controllers.controller import Runner_handle_mujoco #, Runner_offline_mujoco
 
 import time
 import cv2
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     parser.add_argument("--config",
                         type=str,
                         help="config file name in the configs folder",
-                        default="run_loco_squat_grasp.yaml")
+                        default="run_43dof.yaml")
     parser.add_argument("--save_data", action="store_true", help="whether saving the mujoco data")
     parser.add_argument("--save_data_dir", type=str, help="where to save the data", default="./save_mujoco_data")
     parser.add_argument("--save_image", action="store_true", help="whether saving the mujoco image")

@@ -179,9 +179,14 @@ class Runner:
                                                                     self.dqj, target_dof_pos)
             alpha = self.loco_controller.transition_count / self.loco_controller.config.transition_time
             self.target_dof_pos = other_policy_target_dof_pos.copy()
+
+            #print(f"self.target_dof_pos {self.target_dof_pos.shape}\n \
+            #      self.loco_controller.last_policy_target_dof_pos {self.loco_controller.last_policy_target_dof_pos.shape}\n \
+            #      self.loco_controller.config.default_angles {self.config.default_angles.shape}")
+            
             self.target_dof_pos[self.config.action_hl_idx] = (
                 alpha * self.loco_controller.last_policy_target_dof_pos +
-                (1 - alpha) * self.loco_controller.config.default_angles.copy())[self.config.action_hl_idx]
+                (1 - alpha) * self.config.default_angles.copy())[self.config.action_hl_idx]
             self.loco_controller.transition_count -= 1
             return True
             # print('transition_loco')
@@ -711,14 +716,28 @@ class Runner_handle_mujoco(Runner):
             }
             pickle.dump(rawdata, open(filepath, "wb"))
             time.sleep(0.02)
+    def pad(self, array):
+        a = array[:22]
+        b = array[22:]
+        pad = np.zeros(7)
+        return np.concatenate((a, pad, b, pad))
 
-    def pd_control(self, controller, target_q):
+    def pd_control(self, controller: Controller, target_q):
         """Calculates torques from position commands"""
-        kp = controller.kps
-        kd = controller.kds
+        kp = self.pad(controller.kps)
+        kd = self.pad(controller.kds)
         q = self.d.qpos[7:][self.real_dof_idx]
         target_dq = np.zeros_like(kd)
         dq = self.d.qvel[6:][self.real_dof_idx]
+
+        """
+        print("target_q shape:", target_q.shape)
+        print("q shape:", q.shape)
+        print("target_dq shape:", target_dq.shape)
+        print("dq shape:", dq.shape)
+        print("kp shape:", kp.shape)
+        print("kd shape:", kd.shape)
+        """
         return (target_q - q) * kp + (target_dq - dq) * kd
 
     def get_gravity_orientation(self, quaternion):
@@ -759,6 +778,10 @@ class Runner_handle_mujoco(Runner):
                                                             self.dqj, target_dof_pos)
             self.transition_squat()
         tau = self.pd_control(self.squat_controller, self.target_dof_pos)
+
+        if 1 in self.d.warning.number:
+            print(self.d.warning)
+        
         self.d.ctrl[:] = tau
 
         current_control_timestamp = time.time()

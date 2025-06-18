@@ -81,11 +81,11 @@ class SquatLowLevelPolicy:
         obs_omega = omega * self.cfg.ang_vel_scale
         obs_qj = (qj - default_angles_obs) * self.cfg.dof_pos_scale
         obs_dqj = dqj * self.cfg.dof_vel_scale
-        assert obs_qj.shape[0] == self.cfg.num_dof
+        assert int(obs_qj.shape[0]) == int(self.cfg.num_dof), f"Assertion failed: obs_qj.shape[0] {obs_qj.shape[0]} != self.cfg.num_dof {self.cfg.num_dof}"
         # update gait
         obs = np.concatenate([obs_cmd, gravity_orientation, obs_omega, obs_qj, obs_dqj, self._last_action])
 
-        assert obs.shape[0] == self.cfg.num_obs
+        assert int(obs.shape[0]) == int(self.cfg.num_obs), f"Assertion failed: obs.shape[0] {obs.shape[0]} != self.cfg.num_obs {self.cfg.num_obs}"
         clip_obs = self.cfg.clip_observations
         obs_buf = np.clip(obs, -clip_obs, clip_obs)
         obs_buf = obs_buf.astype(np.float32).reshape(1, -1)
