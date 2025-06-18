@@ -1,8 +1,8 @@
 ############################################### CHANGE HERE ####################################################################
 squat_config: 'g1_squat.yaml'
 loco_config: 'g1_loco.yaml'
-exp_name: 'run_teleoperation'
-xml_path: "resources/robots/g1_description/g1_43dof.xml"
+exp_name: 'run_mujoco'
+xml_path: "resources/robots/g1_description/g1_body29_dex.xml"
 
 control_dt: 0.02
 control_decimation: 4

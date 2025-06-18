@@ -83,7 +83,7 @@ if __name__ == "__main__":
     parser.add_argument("--config",
                         type=str,
                         help="config file name in the configs folder",
-                        default="run_43dof.yaml")
+                        default="run_mujoco.yaml")
     parser.add_argument("--save_data", action="store_true", help="whether saving the mujoco data")
     parser.add_argument("--save_data_dir", type=str, help="where to save the data", default="./save_mujoco_data")
     parser.add_argument("--save_image", action="store_true", help="whether saving the mujoco image")
