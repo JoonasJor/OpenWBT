@@ -29,6 +29,6 @@ nosetests.xml
 test-results/
 
 *.pem
-
 unitree_ros2/
 data/
+MUJOCO_LOG.TXT
