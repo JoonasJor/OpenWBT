@@ -716,10 +716,16 @@ class Runner_handle_mujoco(Runner):
             }
             pickle.dump(rawdata, open(filepath, "wb"))
             time.sleep(0.02)
+
     def pad(self, array):
         a = array[:22]
         b = array[22:]
-        pad = np.zeros(7)
+        pad = np.array([])
+        if self.config.num_dof == 43:
+            pad = np.zeros(7)
+        elif self.config.num_dof == 53:
+            pad = np.zeros(12)
+            
         return np.concatenate((a, pad, b, pad))
 
     def pd_control(self, controller: Controller, target_q):
@@ -730,14 +736,13 @@ class Runner_handle_mujoco(Runner):
         target_dq = np.zeros_like(kd)
         dq = self.d.qvel[6:][self.real_dof_idx]
 
-        """
-        print("target_q shape:", target_q.shape)
+        """print("target_q shape:", target_q.shape)
         print("q shape:", q.shape)
         print("target_dq shape:", target_dq.shape)
         print("dq shape:", dq.shape)
         print("kp shape:", kp.shape)
-        print("kd shape:", kd.shape)
-        """
+        print("kd shape:", kd.shape)"""
+        
         return (target_q - q) * kp + (target_dq - dq) * kd
 
     def get_gravity_orientation(self, quaternion):
