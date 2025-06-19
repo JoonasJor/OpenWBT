@@ -717,21 +717,24 @@ class Runner_handle_mujoco(Runner):
             pickle.dump(rawdata, open(filepath, "wb"))
             time.sleep(0.02)
 
-    def pad(self, array):
-        a = array[:22]
-        b = array[22:]
-        pad = np.array([])
-        if self.config.num_dof == 43:
-            pad = np.zeros(7)
-        elif self.config.num_dof == 53:
-            pad = np.zeros(12)
-            
-        return np.concatenate((a, pad, b, pad))
-
+    def set_finger_torques(self, all_torques, left_finger_torques, right_finger_torques):
+        left_finger_indice = self.config.left_finger_idx
+        right_finger_indice = self.config.right_finger_idx
+        all_torques[left_finger_indice] = left_finger_torques
+        all_torques[right_finger_indice] = right_finger_torques
+        return all_torques
+    
+    def reset_finger_torques(self, body_torques):
+        a = body_torques[:22]
+        b = body_torques[22:]
+        left_finger_torques = np.zeros(len(self.config.left_finger_idx))
+        right_finger_torques = np.zeros(len(self.config.right_finger_idx))
+        return np.concatenate((a, left_finger_torques, b, right_finger_torques))
+    
     def pd_control(self, controller: Controller, target_q):
         """Calculates torques from position commands"""
-        kp = self.pad(controller.kps)
-        kd = self.pad(controller.kds)
+        kp = self.reset_finger_torques(controller.kps)
+        kd = self.reset_finger_torques(controller.kds)
         q = self.d.qpos[7:][self.real_dof_idx]
         target_dq = np.zeros_like(kd)
         dq = self.d.qvel[6:][self.real_dof_idx]
@@ -784,6 +787,14 @@ class Runner_handle_mujoco(Runner):
             self.transition_squat()
         tau = self.pd_control(self.squat_controller, self.target_dof_pos)
 
+        #left_finger_torques = np.full(len(self.config.left_finger_idx), 2)
+        left_finger_torques = np.zeros(len(self.config.left_finger_idx))
+        left_finger_torques[0] = -2
+        #right_finger_torques = np.full(len(self.config.right_finger_idx), 2)
+        right_finger_torques = np.zeros(len(self.config.right_finger_idx))
+        right_finger_torques[0] = -2
+        tau = self.set_finger_torques(tau, left_finger_torques, right_finger_torques)
+
         if 1 in self.d.warning.number:
             print(self.d.warning)
         
@@ -822,6 +833,14 @@ class Runner_handle_mujoco(Runner):
                                                                self.dqj, target_dof_pos)
 
         tau = self.pd_control(self.loco_controller, self.target_dof_pos)
+
+        #left_finger_torques = np.full(len(self.config.left_finger_idx), 2)
+        left_finger_torques = np.zeros(len(self.config.left_finger_idx))
+        left_finger_torques[0] = 2
+        #right_finger_torques = np.full(len(self.config.right_finger_idx), 2)
+        right_finger_torques = np.zeros(len(self.config.right_finger_idx))
+        right_finger_torques[0] = 2
+        tau = self.set_finger_torques(tau, left_finger_torques, right_finger_torques)
         # breakpoint()
         self.d.ctrl[:] = tau
 

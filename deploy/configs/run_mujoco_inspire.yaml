@@ -36,6 +36,8 @@ leg_joint2motor_idx: [0, 1, 2, 3, 4, 5,
 arm_waist_joint2motor_idx: [12, 13, 14,
                             15, 16, 17, 18, 19, 20, 21,
                             34, 35, 36, 37, 38, 39, 40]
+left_finger_idx: [22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33]
+right_finger_idx: [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52]
 
 kps: [ # change with urdf
   100, 100, 100, 150, 40, 40,     # left leg
