@@ -679,9 +679,9 @@ class Runner_handle_mujoco(Runner):
         super().__init__(config, args)
 
         # Load robot model
-        self.m = mujoco.MjModel.from_xml_path(config.xml_path)
-        self.d = mujoco.MjData(self.m)
-        self.m.opt.timestep = self.config.simulation_dt
+        self.model = mujoco.MjModel.from_xml_path(config.xml_path)
+        self.data = mujoco.MjData(self.model)
+        self.model.opt.timestep = self.config.simulation_dt
         self.last_control_timestamp = time.time()
 
         self.save_data = args.save_data
@@ -735,9 +735,9 @@ class Runner_handle_mujoco(Runner):
         """Calculates torques from position commands"""
         kp = self.reset_finger_torques(controller.kps)
         kd = self.reset_finger_torques(controller.kds)
-        q = self.d.qpos[7:][self.real_dof_idx]
+        q = self.data.qpos[7:][self.real_dof_idx]
         target_dq = np.zeros_like(kd)
-        dq = self.d.qvel[6:][self.real_dof_idx]
+        dq = self.data.qvel[6:][self.real_dof_idx]
 
         """print("target_q shape:", target_q.shape)
         print("q shape:", q.shape)
@@ -763,10 +763,59 @@ class Runner_handle_mujoco(Runner):
         return gravity_orientation
 
     def refresh_prop(self):
-        self.qj = self.d.qpos[7:][self.config.dof_idx]
-        self.dqj = self.d.qvel[6:][self.config.dof_idx]
-        self.quat = self.d.qpos[3:7]
-        self.ang_vel = self.d.qvel[3:6]
+        self.qj = self.data.qpos[7:][self.config.dof_idx]
+        self.dqj = self.data.qvel[6:][self.config.dof_idx]
+        self.quat = self.data.qpos[3:7]
+        self.ang_vel = self.data.qvel[3:6]
+
+    def print_force_sensors(self):
+        sensors_left_hand = [
+            "left_palm_force_sensor",
+            "left_thumb_force_sensor_1",
+            "left_thumb_force_sensor_2",
+            "left_thumb_force_sensor_3",
+            "left_thumb_force_sensor_4",
+            "left_index_force_sensor_1",
+            "left_index_force_sensor_2",
+            "left_index_force_sensor_3",
+            "left_middle_force_sensor_1",
+            "left_middle_force_sensor_2",
+            "left_middle_force_sensor_3",
+            "left_ring_force_sensor_1",
+            "left_ring_force_sensor_2",
+            "left_ring_force_sensor_3",
+            "left_little_force_sensor_1",
+            "left_little_force_sensor_2",
+            "left_little_force_sensor_3"
+        ]
+        sensors_right_hand = [
+            "right_palm_force_sensor",
+            "right_thumb_force_sensor_1",
+            "right_thumb_force_sensor_2",
+            "right_thumb_force_sensor_3",
+            "right_thumb_force_sensor_4",
+            "right_index_force_sensor_1",
+            "right_index_force_sensor_2",
+            "right_index_force_sensor_3",
+            "right_middle_force_sensor_1",
+            "right_middle_force_sensor_2",
+            "right_middle_force_sensor_3",
+            "right_ring_force_sensor_1",
+            "right_ring_force_sensor_2",
+            "right_ring_force_sensor_3",
+            "right_little_force_sensor_1",
+            "right_little_force_sensor_2",
+            "right_little_force_sensor_3"
+        ]
+        print("Left hand:")
+        for sensor in sensors_left_hand:
+            print(f"{sensor}:", self.data.sensor(sensor).data)
+        print()
+        print("Right hand:")
+        for sensor in sensors_right_hand:
+            print(f"{sensor}:", self.data.sensor(sensor).data)
+        print()
+        time.sleep(0.001)
 
     def run_squat(self, manual=True):
         if self.counter % self.config.control_decimation == 0:
@@ -790,15 +839,17 @@ class Runner_handle_mujoco(Runner):
         #left_finger_torques = np.full(len(self.config.left_finger_idx), 2)
         left_finger_torques = np.zeros(len(self.config.left_finger_idx))
         left_finger_torques[0] = -2
+        left_finger_torques[[6,7,8,9]] = 2
         #right_finger_torques = np.full(len(self.config.right_finger_idx), 2)
         right_finger_torques = np.zeros(len(self.config.right_finger_idx))
         right_finger_torques[0] = -2
+
         tau = self.set_finger_torques(tau, left_finger_torques, right_finger_torques)
 
-        if 1 in self.d.warning.number:
-            print(self.d.warning)
+        if 1 in self.data.warning.number:
+            print(self.data.warning)
         
-        self.d.ctrl[:] = tau
+        self.data.ctrl[:] = tau
 
         current_control_timestamp = time.time()
         # time.sleep(config.control_dt)
@@ -808,9 +859,12 @@ class Runner_handle_mujoco(Runner):
         current_control_timestamp = time.time()
         self.last_control_timestamp = current_control_timestamp
 
-        mujoco.mj_step(self.m, self.d)
+        mujoco.mj_step(self.model, self.data)
         self.counter += 1
         self.post_squat()
+
+        self.print_force_sensors()
+        #print("left_palm_force_sensor:", self.data.sensor("left_palm_force_sensor").data)
 
     def run_loco(self, manual=True):
         if self.counter % self.config.control_decimation == 0:
@@ -837,12 +891,13 @@ class Runner_handle_mujoco(Runner):
         #left_finger_torques = np.full(len(self.config.left_finger_idx), 2)
         left_finger_torques = np.zeros(len(self.config.left_finger_idx))
         left_finger_torques[0] = 2
+        left_finger_torques[[6,7,8,9]] = -2
         #right_finger_torques = np.full(len(self.config.right_finger_idx), 2)
         right_finger_torques = np.zeros(len(self.config.right_finger_idx))
         right_finger_torques[0] = 2
         tau = self.set_finger_torques(tau, left_finger_torques, right_finger_torques)
         # breakpoint()
-        self.d.ctrl[:] = tau
+        self.data.ctrl[:] = tau
 
         current_control_timestamp = time.time()
         # time.sleep(config.control_dt)
@@ -852,10 +907,11 @@ class Runner_handle_mujoco(Runner):
         current_control_timestamp = time.time()
         self.last_control_timestamp = current_control_timestamp
 
-        mujoco.mj_step(self.m, self.d)
+        mujoco.mj_step(self.model, self.data)
         self.counter += 1
         self.post_loco()
 
+        self.print_force_sensors()
 
 from mujoco import Renderer
 
@@ -866,24 +922,24 @@ class Runner_handle_mujoco_vision(Runner_handle_mujoco):
         self.config = config
         super().__init__(config, args)
 
-        self.renderer = Renderer(self.m, width=640, height=480)
+        self.renderer = Renderer(self.model, width=640, height=480)
         left_camera_name = "left_eye"
-        self.left_camera_id = mujoco.mj_name2id(self.m, mujoco.mjtObj.mjOBJ_CAMERA, left_camera_name)
+        self.left_camera_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_CAMERA, left_camera_name)
         right_camera_name = "right_eye"
-        self.right_camera_id = mujoco.mj_name2id(self.m, mujoco.mjtObj.mjOBJ_CAMERA, right_camera_name)
+        self.right_camera_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_CAMERA, right_camera_name)
 
     def run_loco(self, manual=True):
         super().run_loco(manual)
-        self.renderer.update_scene(self.d, camera=self.left_camera_id)
+        self.renderer.update_scene(self.data, camera=self.left_camera_id)
         left_image = self.renderer.render()
-        self.renderer.update_scene(self.d, camera=self.right_camera_id)
+        self.renderer.update_scene(self.data, camera=self.right_camera_id)
         right_image = self.renderer.render()
         self.render_image = np.concatenate((left_image, right_image), axis=1)
 
     def run_squat(self, manual=True):
         super().run_squat(manual)
-        self.renderer.update_scene(self.d, camera=self.left_camera_id)
+        self.renderer.update_scene(self.data, camera=self.left_camera_id)
         left_image = self.renderer.render()
-        self.renderer.update_scene(self.d, camera=self.right_camera_id)
+        self.renderer.update_scene(self.data, camera=self.right_camera_id)
         right_image = self.renderer.render()
         self.render_image = np.concatenate((left_image, right_image), axis=1)

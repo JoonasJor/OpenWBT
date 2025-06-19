@@ -57,7 +57,7 @@ def deploy_handle_mujoco(args):
     print('Squat mode!')
     print('Press 1 to start the locomotion mode!')
 
-    with mujoco.viewer.launch_passive(runner.m, runner.d) as viewer:
+    with mujoco.viewer.launch_passive(runner.model, runner.data) as viewer:
         runner.last_control_timestamp = time.time()
         while True:
             if current_mode == "LOCOMOTION":

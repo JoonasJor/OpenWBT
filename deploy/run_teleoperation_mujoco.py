@@ -83,7 +83,7 @@ def deploy_handle_mujoco(args):
         p_record_video = Process(target=save_images, args=(tv_img_shm.name, tv_img_shape, tv_img_dtype))
         p_record_video.start()
 
-    with mujoco.viewer.launch_passive(runner.m, runner.d) as viewer:
+    with mujoco.viewer.launch_passive(runner.model, runner.data) as viewer:
         runner.last_control_timestamp = time.time()
         while True:
             if current_mode == "LOCOMOTION":
