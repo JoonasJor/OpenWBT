@@ -768,7 +768,7 @@ class Runner_handle_mujoco(Runner):
         self.quat = self.data.qpos[3:7]
         self.ang_vel = self.data.qvel[3:6]
 
-    def print_force_sensors(self):
+    def print_inspire_force_sensors(self):
         sensors_left_hand = [
             "left_palm_force_sensor",
             "left_thumb_force_sensor_1",
@@ -839,7 +839,7 @@ class Runner_handle_mujoco(Runner):
         #left_finger_torques = np.full(len(self.config.left_finger_idx), 2)
         left_finger_torques = np.zeros(len(self.config.left_finger_idx))
         left_finger_torques[0] = -2
-        left_finger_torques[[6,7,8,9]] = 2
+        left_finger_torques[[8,9]] = 2
         #right_finger_torques = np.full(len(self.config.right_finger_idx), 2)
         right_finger_torques = np.zeros(len(self.config.right_finger_idx))
         right_finger_torques[0] = -2
@@ -863,8 +863,7 @@ class Runner_handle_mujoco(Runner):
         self.counter += 1
         self.post_squat()
 
-        self.print_force_sensors()
-        #print("left_palm_force_sensor:", self.data.sensor("left_palm_force_sensor").data)
+        self.print_inspire_force_sensors()
 
     def run_loco(self, manual=True):
         if self.counter % self.config.control_decimation == 0:
@@ -911,7 +910,7 @@ class Runner_handle_mujoco(Runner):
         self.counter += 1
         self.post_loco()
 
-        self.print_force_sensors()
+        self.print_inspire_force_sensors()
 
 from mujoco import Renderer
 
