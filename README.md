@@ -11,6 +11,21 @@
 
 </div>
 
+## Fork
+- Add keyboard controls
+- Add inspire hands with force sensors to the model
+  
+Keyboard button mappings:  
+esc = Stop keyboard listener  
+1 = Switch to locomotion mode  
+2 = Switch to squat mode  
+3 = Stop walking in place  
+4 = Not used  
+5 = Not used  
+6 = Start and run  
+7 = Damping  
+WASD = Movement in locomotion mode / Squat in squat mode  
+Arrow keys = Turn in locomotion mode / Bend in squat mode  
 
 # Introduction
 The technical implementation of this project is mainly supported by [R2S2](https://zzk273.github.io/R2S2/). This repository implements **whole body teleoperation** of the Unitree G1 and H1 humanoid robot using Apple Vision Pro. The system supports **both real robots and simulation environments**. **Only one tele-operator** is needed to control the robot to perform movements such as walking, squatting, bending, grasping, and lifting, thereby significantly expanding the robot's operational capabilities and enabling it to accomplish a wider range of tasks.
